@@ -27,9 +27,10 @@ switch ($routeInfo[0]) {
         break;
 
     case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
+        [$class, $method] = $routeInfo[1];
         $vars    = $routeInfo[2];
-        echo $handler($vars);
+        $controller = new $class();
+        echo $controller->$method($vars ?? []);
         break;
 }
 
