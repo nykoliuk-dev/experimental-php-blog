@@ -3,24 +3,42 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Repository\PostRepository;
+
 class PostController
 {
-    public function index(): string  // список постов
+    public function index(): void
     {
-        return 'Список постов';
+        $repo = new PostRepository(DB_PATH);
+        $posts = $repo->getPosts();
+
+        render('posts/index', [
+            'title' => 'Список постов',
+            'posts' => $posts,
+        ]);
     }
 
-    public function add(): string    // форма + добавление
+    public function show(array $params): string
+    {
+        return 'один пост';
+    }
+    public function create(): string
+    {
+        return 'форма создания';
+    }
+    public function store(): string
     {
         return 'Добавить пост';
     }
-
     public function edit(array $params): string
     {
         return "Редактировать пост № {$params['id']}";
     }
-
-    public function delete(array $params): string
+    public function update(array $p): string
+    {
+        return 'сохранение изменений';
+    }
+    public function destroy(array $params): string
     {
         return "Удалить пост № {$params['id']}";
     }
