@@ -29,7 +29,8 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         [$class, $method] = $routeInfo[1];
         $vars    = $routeInfo[2];
-        $controller = new $class();
+        $repo = new \App\Repository\PostRepository(DB_PATH);
+        $controller = new $class($repo);
         echo $controller->$method($vars ?? []);
         break;
 }

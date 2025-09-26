@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Core\Controller;
 use App\Repository\PostRepository;
 
-class PostController
+class PostController extends Controller
 {
     public function index(): void
     {
-        $repo = new PostRepository(DB_PATH);
-        $posts = $repo->getPosts();
+        $posts = $this->repo->getPosts();
 
         render('posts/index', [
             'title' => 'Список постов',
