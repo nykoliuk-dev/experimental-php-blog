@@ -21,4 +21,6 @@ $config = [
     'env'   => $env,
 ];
 
+define("APP", $config['paths']['app']);
+
 return $config;

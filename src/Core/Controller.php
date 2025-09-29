@@ -12,10 +12,11 @@ class Controller
         protected PostRepository $repo
     ) {}
 
-    protected function render(string $template, array $data = []): void
+    protected function render(string $template, array $data): void
     {
         extract($data, EXTR_SKIP);
         ob_start();
+
         require $this->config['paths']['view'] . '/' . $template . '.php';
         $content = ob_get_clean();
 

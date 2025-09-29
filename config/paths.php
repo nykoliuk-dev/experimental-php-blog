@@ -6,6 +6,6 @@ return [
     'cache'   => dirname(__DIR__) . "/tmp/cache",
     'config'  => dirname(__DIR__) . "/config",
     'app'     => dirname(__DIR__) . "/src",
-    'view'     => dirname(__DIR__) . "/src/View",
+    'view'    => dirname(__DIR__) . "/src/View",
     'helpers' => dirname(__DIR__) . "/src/Helpers",
 ];
