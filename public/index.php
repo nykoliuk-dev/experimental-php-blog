@@ -4,9 +4,9 @@ declare(strict_types=1);
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 
-require_once dirname(__DIR__) . '/config/init.php';
+$config = require_once dirname(__DIR__) . '/bootstrap/init.php';
 
-$routes = require CONFIG . '/routes.php';
+$routes = require_once $config['paths']['config'] . '/routes.php';
 
 $dispatcher = simpleDispatcher($routes);
 
@@ -29,8 +29,8 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         [$class, $method] = $routeInfo[1];
         $vars    = $routeInfo[2];
-        $repo = new \App\Repository\PostRepository(DB_PATH);
-        $controller = new $class($repo);
+        $repo = new \App\Repository\PostRepository($config['env']['db_path']);
+        $controller = new $class($config, $repo);
         echo $controller->$method($vars ?? []);
         break;
 }

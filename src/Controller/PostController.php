@@ -12,7 +12,7 @@ class PostController extends Controller
     {
         $posts = $this->repo->getPosts();
 
-        render('posts/index', [
+        $this->render('posts/index', [
             'title' => 'Список постов',
             'posts' => $posts,
         ]);
