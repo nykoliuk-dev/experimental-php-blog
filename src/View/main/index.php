@@ -21,9 +21,9 @@
             </div>
             <div class="col-md-6">
                 <div class="tm-description-box">
-                    <h4 class="tm-gallery-title"><?=$post['title']?></h4>
-                    <p class="tm-mb-45"><?=$post['content']?></p>
-                    <a href="posts/<?=$post['id']?>" class="tm-btn tm-btn-default tm-right">Read More</a>
+                    <h4 class="tm-gallery-title"><?=$post->getTitle()?></h4>
+                    <p class="tm-mb-45"><?=$post->getContent()?></p>
+                    <a href="posts/<?=$post->getId()?>" class="tm-btn tm-btn-default tm-right">Read More</a>
                 </div>
             </div>
         </div>
