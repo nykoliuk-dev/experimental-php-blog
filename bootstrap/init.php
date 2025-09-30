@@ -13,6 +13,7 @@ $dotenv->required('DB_PATH')->notEmpty();
 $paths = require $root . '/config/paths.php';
 
 $env = require $root . '/config/env.php';
+$env['db_path'] = $paths['root'] . $env['db_path'];
 
 require_once $paths['helpers'] . '/functions.php';
 
