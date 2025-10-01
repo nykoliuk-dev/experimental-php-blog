@@ -17,29 +17,4 @@ class PostController extends Controller
             'posts' => $posts,
         ]);
     }
-
-    public function show(array $params): string
-    {
-        return 'один пост';
-    }
-    public function create(): string
-    {
-        return 'форма создания';
-    }
-    public function store(): string
-    {
-        return 'Добавить пост';
-    }
-    public function edit(array $params): string
-    {
-        return "Редактировать пост № {$params['id']}";
-    }
-    public function update(array $p): string
-    {
-        return 'сохранение изменений';
-    }
-    public function destroy(array $params): string
-    {
-        return "Удалить пост № {$params['id']}";
-    }
 }

@@ -8,10 +8,4 @@ use App\Controller\PostController;
 return function (RouteCollector $r): void {
     $r->addRoute('GET', '/', [MainController::class, 'index']);
     $r->addRoute('GET', '/posts', [PostController::class, 'index']);
-    $r->addRoute('GET', '/posts/{id:\d+}', [PostController::class, 'show']);
-    $r->addRoute('GET', '/posts/create', [PostController::class, 'create']);
-    $r->addRoute('POST', '/posts', [PostController::class, 'store']);
-    $r->addRoute('GET', '/posts/{id:\d+}/edit', [PostController::class, 'edit']);
-    $r->addRoute('POST', '/posts/{id:\d+}/update', [PostController::class, 'update']);
-    $r->addRoute('POST', '/posts/{id:\d+}/delete', [PostController::class, 'destroy']);
 };
