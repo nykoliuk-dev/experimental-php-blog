@@ -5,7 +5,7 @@ namespace App\Core;
 
 use App\Repository\PostRepository;
 
-class Controller
+abstract class Controller
 {
     public function __construct(
         protected array $config,
