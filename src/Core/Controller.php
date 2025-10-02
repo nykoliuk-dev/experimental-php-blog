@@ -16,9 +16,14 @@ abstract class Controller
 
     protected function render(string $template, array $data): void
     {
-        $content = $this->twig->render($template . '.twig', $data);
+        extract($data, EXTR_SKIP);
+
+        $content = $this->twig->render($template . '.twig', [
+            'posts' => $posts,
+        ]);
         echo $this->twig->render('layout.twig', [
             'content' => $content,
+            'title' => $title,
         ]);
     }
 }
