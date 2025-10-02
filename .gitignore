@@ -1,0 +1,6 @@
+.osp/
+.idea/
+.env
+*.log
+*.tmp
+/vendor/
