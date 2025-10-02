@@ -3,7 +3,8 @@
   "description": "description",
   "require": {
     "vlucas/phpdotenv": "^5.6",
-    "nikic/fast-route": "^1.3"
+    "nikic/fast-route": "^1.3",
+    "twig/twig": "^3.0"
   },
   "autoload": {
     "psr-4": {
