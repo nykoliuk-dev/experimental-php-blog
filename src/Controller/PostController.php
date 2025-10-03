@@ -17,4 +17,19 @@ class PostController extends Controller
             'posts' => $posts,
         ]);
     }
+    public function show(array $params): string
+    {
+        return 'один пост';
+    }
+    public function create(): string
+    {
+        $this->render('posts/create', [
+            'title' => 'Добавить статью',
+        ]);
+        return 'форма создания';
+    }
+    public function store(): string
+    {
+        return 'Добавить пост';
+    }
 }
