@@ -8,6 +8,8 @@ $bootstrap = require_once dirname(__DIR__) . '/bootstrap/init.php';
 $config = $bootstrap['config'];
 $twig = $bootstrap['twig'];
 
+session_start();
+
 $routes = require_once $config['paths']['config'] . '/routes.php';
 
 $dispatcher = simpleDispatcher($routes);
