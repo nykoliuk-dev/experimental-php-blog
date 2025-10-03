@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
 $root = dirname(__DIR__);
 
 require_once $root . '/vendor/autoload.php';
@@ -22,6 +25,13 @@ $config = [
     'env'   => $env,
 ];
 
-define("APP", $config['paths']['app']);
+$loader = new FilesystemLoader($paths['view']);
+$twig = new Environment($loader, [
+    'cache' => $paths['cache'] . '/twig',
+    'debug' => $env['debug'],
+]);
 
-return $config;
+return [
+    'config' => $config,
+    'twig'   => $twig,
+];
