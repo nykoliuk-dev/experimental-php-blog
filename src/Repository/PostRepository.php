@@ -35,7 +35,8 @@ class PostRepository
                 (int)$item['id'],
                 $item['date'],
                 $item['title'],
-                $item['content']
+                $item['content'],
+                $item['image_name'],
             );
         }
 
