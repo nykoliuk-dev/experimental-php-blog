@@ -79,9 +79,26 @@ class PostRepository
         return true;
     }
 
+    private function postToArray(Post $post): array
+    {
+        return [
+            'id'         => $post->getId(),
+            'date'       => $post->getDate(),
+            'title'      => $post->getTitle(),
+            'content'    => $post->getContent(),
+            'image_name' => $post->getImgName(),
+        ];
+    }
+
     private function savePosts(array $posts): void
     {
-        $res = file_put_contents($this->storage, json_encode($posts, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        $data = array_map([$this, 'postToArray'], $posts);
+
+        $res = file_put_contents(
+            $this->storage,
+            json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+
         if ($res === false) {
             throw new \RuntimeException('Cannot write to DB file.');
         }
