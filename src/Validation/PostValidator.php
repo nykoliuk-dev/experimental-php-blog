@@ -7,10 +7,11 @@ use Rakit\Validation\Validator;
 
 class PostValidator
 {
+    public function __construct(private Validator $validator) {}
+
     public function validate(array $data): array
     {
-        $validator = new Validator();
-        $validation = $validator->make($data, [
+        $validation = $this->validator->make($data, [
             'title'   => 'required|min:3',
             'content' => 'required',
             'file' => 'uploaded_file:0,5M,png,jpeg,jpg,gif,webp,avif,heic',
