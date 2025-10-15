@@ -1,0 +1,32 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<header class="row tm-welcome-section">
+    <h2 class="col-12 text-center tm-section-title">Welcome to Simple House</h2>
+    <p class="col-12 text-center">Total 3 HTML pages are included in this template. Header image has a parallax effect. You can feel free to download, edit and use this TemplateMo layout for your commercial or non-commercial websites.</p>
+</header>
+
+<div class="tm-paging-links">
+    <nav>
+        <ul>
+            <li class="tm-paging-item"><a href="/posts/create" class="tm-paging-link">Add article</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="tm-section tm-container-inner">
+    <div class="row">
+        <div class="col-md-6">
+            <figure class="tm-description-figure">
+                <img src="/public/assets/img/gallery/{{ post.getImgName }}" alt="Image" class="img-fluid" />
+            </figure>
+        </div>
+        <div class="col-md-6">
+            <div class="tm-description-box">
+                <h4 class="tm-gallery-title">{{ post.getTitle }}</h4>
+                <p class="tm-mb-45">{{ post.getContent }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
