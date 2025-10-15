@@ -13,11 +13,14 @@
         <div class="row">
             <div class="col-12">
                 <form id="postForm" action="/posts" method="POST" enctype="multipart/form-data" class="tm-contact-form">
+                    <div id="form-messages">
+
+                    </div>
                     <div class="form-group">
                         <input type="text" name="title" class="form-control" placeholder="Title" required>
                     </div>
                     <div class="form-group">
-                        <textarea rows="5" name="text" class="form-control" placeholder="Article text" required></textarea>
+                        <textarea rows="5" name="content" class="form-control" placeholder="Article text" required></textarea>
                     </div>
                     <div class="form-group">
                         <input type="file" name="file" class="form-control" required>
@@ -37,7 +40,9 @@
             $('#postForm').on('submit', function (e) {
                 e.preventDefault();
 
+                let form = $(this);
                 let formData = new FormData(this);
+                let messages = $('#form-messages');
 
                 $.ajax({
                     url: '/posts',
@@ -46,10 +51,27 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        alert('Post added successfully!');
+                        messages
+                            .removeClass('tm-text-danger')
+                            .addClass('tm-text-success')
+                            .html(`${response.message}`);
+
+                        form[0].reset();
                     },
-                    error: function () {
-                        alert('Error while saving post.');
+                    error: function (xhr) {
+                        let res = xhr.responseJSON;
+                        messages.removeClass('tm-text-success').addClass('tm-text-danger');
+
+                        if (res && res.errors) {
+                            let html = '<ul>';
+                            for (const [field, errors] of Object.entries(res.errors)) {
+                                html += `<li>${errors.join('<br>')}</li>`;
+                            }
+                            html += '</ul>';
+                            messages.html(html);
+                        } else {
+                            messages.html('<p>Произошла ошибка при отправке формы.</p>');
+                        }
                     }
                 });
             });
