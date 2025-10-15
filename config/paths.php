@@ -8,4 +8,5 @@ return [
     'app'     => dirname(__DIR__) . "/src",
     'view'    => dirname(__DIR__) . "/src/View",
     'helpers' => dirname(__DIR__) . "/src/Helpers",
+    'gallery' => dirname(__DIR__) . "/public/assets/img/gallery",
 ];
