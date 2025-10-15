@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Core\Controller;
-use App\Model\Post;
+use App\Service\FileService;
 use App\Service\PostService;
 use App\Validation\PostValidator;
 
@@ -42,7 +42,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function store(PostValidator $validator, PostService $postService): void
+    public function store(PostValidator $validator, PostService $postService, FileService $fileService): void
     {
         header('Content-Type: application/json');
 
@@ -54,35 +54,11 @@ class PostController extends Controller
             return;
         }
 
-        $imageName = $this->handleFileUpload($_FILES['file']);
+        $imageName = $fileService->upload($_FILES['file']);
 
         $id = $postService->createPost($_POST['title'], $_POST['content'], $imageName);
 
         echo json_encode(['success' => true, 'message' => "Пост $id успешно добавлен!"]);
         exit;
-    }
-
-    private function handleFileUpload(array $file): string
-    {
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new \RuntimeException('Ошибка загрузки файла.');
-        }
-
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-
-        if (!in_array($ext, $allowed, true)) {
-            throw new \RuntimeException('Недопустимый тип файла.');
-        }
-
-        $uniqueName = uniqid('img_', true) . '.' . $ext;
-        $targetDir = $this->config['paths']['gallery'] . '/';
-        $targetPath = $targetDir . $uniqueName;
-
-        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-            throw new \RuntimeException('Не удалось сохранить файл.');
-        }
-
-        return $uniqueName;
     }
 }
