@@ -52,9 +52,9 @@ switch ($routeInfo[0]) {
 
     case FastRoute\Dispatcher::FOUND:
         [$class, $method] = $routeInfo[1];
-        $vars = $routeInfo[2] ?? [];
+        $params = $routeInfo[2] ?? [];
         $controller = $container->get($class);
-        echo $container->call([$controller, $method], ['vars' => $vars]);
+        echo $container->call([$controller, $method], ['params' => $params]);
         break;
 }
 
