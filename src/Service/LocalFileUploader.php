@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-final class FileService
+final class LocalFileUploader implements FileUploaderInterface
 {
     public function __construct(private string $uploadDir)
     {
@@ -12,14 +12,14 @@ final class FileService
     public function upload(array $file): string
     {
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new \RuntimeException('Ошибка загрузки файла.');
+            throw new \RuntimeException('Error loading file.');
         }
 
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
 
         if (!in_array($ext, $allowed, true)) {
-            throw new \RuntimeException('Недопустимый тип файла.');
+            throw new \RuntimeException('Invalid file type.');
         }
 
         $uniqueName = uniqid('img_', true) . '.' . $ext;
