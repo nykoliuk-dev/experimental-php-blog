@@ -35,10 +35,72 @@ class PostRepository
                 (int)$item['id'],
                 $item['date'],
                 $item['title'],
-                $item['content']
+                $item['content'],
+                $item['image_name'],
             );
         }
 
         return $posts;
+    }
+
+    public function getPost(int $id): ?Post
+    {
+        $posts = $this->getPosts();
+        return $posts[$id] ?? null;
+    }
+
+    public function newPostId(): int
+    {
+        $posts = $this->getPosts();
+        if (empty($posts)) {
+            return 0;
+        }
+
+        return max(array_keys($posts)) + 1;
+    }
+
+    public function addPost(Post $post): int
+    {
+        $posts = $this->getPosts();
+        $id = $post->getId();
+        $posts[$id] = $post;
+        $this->savePosts($posts);
+        return $id;
+    }
+
+    public function removePost(int $id): bool
+    {
+        $posts = $this->getPosts();
+        if (!isset($posts[$id])){
+            return false;
+        }
+        unset($posts[$id]);
+        $this->savePosts($posts);
+        return true;
+    }
+
+    private function postToArray(Post $post): array
+    {
+        return [
+            'id'         => $post->getId(),
+            'date'       => $post->getDate(),
+            'title'      => $post->getTitle(),
+            'content'    => $post->getContent(),
+            'image_name' => $post->getImgName(),
+        ];
+    }
+
+    private function savePosts(array $posts): void
+    {
+        $data = array_map([$this, 'postToArray'], $posts);
+
+        $res = file_put_contents(
+            $this->storage,
+            json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+
+        if ($res === false) {
+            throw new \RuntimeException('Cannot write to DB file.');
+        }
     }
 }

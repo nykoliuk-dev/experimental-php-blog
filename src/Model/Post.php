@@ -10,6 +10,7 @@ class Post
         private string $date,
         private string $title,
         private string $content,
+        private string $imageName,
     ) {}
 
     public function getId(): int
@@ -27,5 +28,10 @@ class Post
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function getImgName(): string
+    {
+        return $this->imageName;
     }
 }

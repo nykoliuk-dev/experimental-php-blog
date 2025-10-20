@@ -1,0 +1,80 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <header class="row tm-welcome-section">
+        <h2 class="col-12 text-center tm-section-title">Add new article</h2>
+        <p class="col-12 text-center">
+            You may use <a rel="nofollow" href="https://www.ltcclock.com/downloads/simple-contact-form/" target="_blank">
+                Simple Contact Form</a> to send email to your inbox.
+        </p>
+    </header>
+
+    <div class="tm-container-inner-2 tm-contact-section">
+        <div class="row">
+            <div class="col-12">
+                <form id="postForm" action="/posts" method="POST" enctype="multipart/form-data" class="tm-contact-form">
+                    <div id="form-messages">
+
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="title" class="form-control" placeholder="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="5" name="content" class="form-control" placeholder="Article text" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                    <div class="form-group tm-d-flex">
+                        <button type="submit" class="tm-btn tm-btn-success tm-btn-right">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            $('#postForm').on('submit', function (e) {
+                e.preventDefault();
+
+                let form = $(this);
+                let formData = new FormData(this);
+                let messages = $('#form-messages');
+
+                $.ajax({
+                    url: '/posts',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        messages
+                            .removeClass('tm-text-danger')
+                            .addClass('tm-text-success')
+                            .html(`${response.message}`);
+
+                        form[0].reset();
+                    },
+                    error: function (xhr) {
+                        let res = xhr.responseJSON;
+                        messages.removeClass('tm-text-success').addClass('tm-text-danger');
+
+                        if (res && res.errors) {
+                            let html = '<ul>';
+                            for (const [field, errors] of Object.entries(res.errors)) {
+                                html += `<li>${errors.join('<br>')}</li>`;
+                            }
+                            html += '</ul>';
+                            messages.html(html);
+                        } else {
+                            messages.html('<p>Произошла ошибка при отправке формы.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -12,7 +12,7 @@ class MainController extends Controller
     {
         $posts = $this->repo->getPosts();
 
-        $this->render('posts/index', [
+        $this->render('main/index', [
             'title' => 'Список постов',
             'posts' => $posts,
         ]);

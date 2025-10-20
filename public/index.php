@@ -1,14 +1,34 @@
 <?php
 declare(strict_types=1);
 
-use FastRoute\RouteCollector;
+use App\Repository\PostRepository;
+use App\Service\FileUploaderInterface;
+use App\Service\LocalFileUploader;
+use DI\ContainerBuilder;
+use Rakit\Validation\Validator;
+use Twig\Environment;
 use function FastRoute\simpleDispatcher;
 
 $bootstrap = require_once dirname(__DIR__) . '/bootstrap/init.php';
 $config = $bootstrap['config'];
 $twig = $bootstrap['twig'];
 
-$routes = require_once $config['paths']['config'] . '/routes.php';
+session_start();
+
+$builder = new ContainerBuilder();
+$builder->addDefinitions([
+    'config' => $config,
+    Environment::class => $twig,
+    PostRepository::class => DI\create()
+        ->constructor($config->dbPath()),
+    Validator::class => DI\autowire(),
+    FileUploaderInterface::class => DI\get(LocalFileUploader::class),
+    LocalFileUploader::class => DI\create()
+        ->constructor($config->gallery),
+]);
+$container = $builder->build();
+
+$routes = require_once $config->configDir . '/routes.php';
 
 $dispatcher = simpleDispatcher($routes);
 
@@ -30,10 +50,9 @@ switch ($routeInfo[0]) {
 
     case FastRoute\Dispatcher::FOUND:
         [$class, $method] = $routeInfo[1];
-        $vars = $routeInfo[2] ?? [];
-        $repo = new \App\Repository\PostRepository($config['env']['db_path']);
-        $controller = new $class($config, $repo, $twig);
-        echo $controller->$method($vars);
+        $params = $routeInfo[2] ?? [];
+        $controller = $container->get($class);
+        echo $container->call([$controller, $method], ['params' => $params]);
         break;
 }
 

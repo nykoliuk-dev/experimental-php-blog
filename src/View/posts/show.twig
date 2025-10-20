@@ -15,21 +15,18 @@
 </div>
 
 <div class="tm-section tm-container-inner">
-    {% for post in posts %}
-        <div class="row">
-            <div class="col-md-6">
-                <figure class="tm-description-figure">
-                    <img src="public/assets/img/gallery/{{ post.getImgName }}" alt="Image" class="img-fluid" />
-                </figure>
-            </div>
-            <div class="col-md-6">
-                <div class="tm-description-box">
-                    <h4 class="tm-gallery-title">{{ post.getTitle }}</h4>
-                    <p class="tm-mb-45">{{ post.getContent }}</p>
-                    <a href="posts/{{ post.getId }}" class="tm-btn tm-btn-default tm-right">Read More</a>
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <figure class="tm-description-figure">
+                <img src="/public/assets/img/gallery/{{ post.getImgName }}" alt="Image" class="img-fluid" />
+            </figure>
+        </div>
+        <div class="col-md-6">
+            <div class="tm-description-box">
+                <h4 class="tm-gallery-title">{{ post.getTitle }}</h4>
+                <p class="tm-mb-45">{{ post.getContent }}</p>
             </div>
         </div>
-    {% endfor %}
+    </div>
 </div>
 {% endblock %}

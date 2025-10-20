@@ -1,1 +1,37 @@
-{"1":{"id":1,"date":"2001-03-10 17:16:18","title":"Hello, World!","content":"Hello all worlds! Some text."},"2":{"id":2,"date":"2001-03-10 17:16:18","title":"Other article!","content":"Some text about other."},"5":{"id":5,"date":"2001-03-10 17:16:18","title":"One more article!","content":"Some text about one more."}}
+{
+    "1": {
+        "id": 1,
+        "date": "2001-03-10 17:16:18",
+        "title": "Hello, World!",
+        "content": "Hello all worlds! Some text.",
+        "image_name": "01.jpg"
+    },
+    "2": {
+        "id": 2,
+        "date": "2001-03-10 17:16:18",
+        "title": "Other article!",
+        "content": "Some text about other.",
+        "image_name": "02.jpg"
+    },
+    "5": {
+        "id": 5,
+        "date": "2001-03-10 17:16:18",
+        "title": "One more article!",
+        "content": "Some text about one more.",
+        "image_name": "05.jpg"
+    },
+    "6": {
+        "id": 6,
+        "date": "2025-10-15 10:56:25",
+        "title": "New acticle",
+        "content": "Content",
+        "image_name": "img_68ef6365f38e37.61093269.jpg"
+    },
+    "7": {
+        "id": 7,
+        "date": "2025-10-15 11:03:33",
+        "title": "New article2",
+        "content": "Content2",
+        "image_name": "img_68ef6365f38e37.61093269.jpg"
+    }
+}
