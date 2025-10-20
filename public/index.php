@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use App\Controller\MainController;
-use App\Controller\PostController;
 use App\Repository\PostRepository;
+use App\Service\FileUploaderInterface;
+use App\Service\LocalFileUploader;
 use DI\ContainerBuilder;
-use FastRoute\RouteCollector;
 use Rakit\Validation\Validator;
 use Twig\Environment;
 use function FastRoute\simpleDispatcher;
@@ -21,16 +20,15 @@ $builder->addDefinitions([
     'config' => $config,
     Environment::class => $twig,
     PostRepository::class => DI\create()
-        ->constructor($config['env']['db_path']),
+        ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
-    MainController::class => DI\autowire()
-        ->constructorParameter('config', DI\get('config')),
-    PostController::class => DI\autowire()
-        ->constructorParameter('config', DI\get('config')),
+    FileUploaderInterface::class => DI\get(LocalFileUploader::class),
+    LocalFileUploader::class => DI\create()
+        ->constructor($config->gallery),
 ]);
 $container = $builder->build();
 
-$routes = require_once $config['paths']['config'] . '/routes.php';
+$routes = require_once $config->configDir . '/routes.php';
 
 $dispatcher = simpleDispatcher($routes);
 
