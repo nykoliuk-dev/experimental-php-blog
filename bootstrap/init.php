@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Core\Config;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
@@ -20,10 +21,16 @@ $env['db_path'] = $paths['root'] . $env['db_path'];
 
 require_once $paths['helpers'] . '/functions.php';
 
-$config = [
-    'paths' => $paths,
-    'env'   => $env,
-];
+$config = new Config(
+    $paths['root'],
+    $paths['cache'],
+    $paths['config'],
+    $paths['app'],
+    $paths['view'],
+    $paths['helpers'],
+    $paths['gallery'],
+    $env
+);
 
 $loader = new FilesystemLoader($paths['view']);
 $twig = new Environment($loader, [
