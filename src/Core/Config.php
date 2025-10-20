@@ -15,4 +15,9 @@ final class Config
         public readonly string $gallery,
         public readonly array $env
     ) {}
+
+    public function dbPath(): string
+    {
+        return $this->env['db_path'];
+    }
 }
