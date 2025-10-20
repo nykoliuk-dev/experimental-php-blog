@@ -9,7 +9,6 @@ use Twig\Environment;
 abstract class Controller
 {
     public function __construct(
-        protected array $config,
         protected PostRepository $repo,
         protected Environment $twig
     ) {}
