@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Core\Controller;
-use App\Service\FileService;
+use App\Service\FileUploaderInterface;
 use App\Service\PostService;
 use App\Validation\PostValidator;
 
@@ -42,7 +42,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function store(PostValidator $validator, PostService $postService, FileService $fileService): void
+    public function store(PostValidator $validator, PostService $postService, FileUploaderInterface $fileService): void
     {
         header('Content-Type: application/json');
 
