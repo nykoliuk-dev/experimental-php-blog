@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Repository\PostRepository;
+use App\Repository\JsonPostRepository;
 use Twig\Environment;
 
 abstract class Controller
 {
     public function __construct(
-        protected PostRepository $repo,
-        protected Environment $twig
+        protected JsonPostRepository $repo,
+        protected Environment        $twig
     ) {}
 
     protected function render(string $template, array $data): void
