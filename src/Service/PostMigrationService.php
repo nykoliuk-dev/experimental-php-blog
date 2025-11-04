@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Model\Post;
 use App\Repository\PostRepositoryInterface;
 
 class PostMigrationService

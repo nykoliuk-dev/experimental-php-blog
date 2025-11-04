@@ -23,7 +23,6 @@ class MigrateCommand extends Command
 
     public function __construct(
         private JsonPostRepository $jsonRepo,
-        private DatabasePostRepository $dbRepo
     )
     {
         parent::__construct('app:migrate:posts');
