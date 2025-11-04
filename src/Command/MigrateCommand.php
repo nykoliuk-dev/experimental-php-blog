@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Model\Post;
-use App\Repository\DatabasePostRepository;
-use App\Repository\JsonPostRepository;
+use App\Service\PostMigrationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,7 +21,7 @@ class MigrateCommand extends Command
     protected static $defaultName = 'app:migrate:posts';
 
     public function __construct(
-        private JsonPostRepository $jsonRepo,
+        private PostMigrationService $service,
     )
     {
         parent::__construct('app:migrate:posts');
@@ -48,17 +47,8 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>Starting migration...</info>');
-        $posts = $this->jsonRepo->getPosts();
 
-        $count = 0;
-        foreach ($posts as $post){
-            if($this->postReadyToMigrate($post)){
-                $this->dbRepo->addPost($post);
-                $count++;
-            }else{
-                $output->writeln("<error>Post №{$post->getId()} is not valid</error>");
-            }
-        }
+        $count = $this->service->migrate();
 
         $output->writeln("$count posts successfully added");
 
