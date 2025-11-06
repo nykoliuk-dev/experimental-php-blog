@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\MigrationResult;
 use App\Model\Post;
 use App\Repository\PostRepositoryInterface;
 
@@ -17,19 +18,37 @@ class PostMigrationService
         private PostRepositoryInterface $dbRepo
     ) {}
 
-    public function migrate(): int
+    /**
+     * Migrates posts from JSON to the database.
+     *
+     * @return MigrationResult Result object containing success count and errors.
+     */
+    public function migrate(): MigrationResult
     {
         $posts = $this->jsonRepo->getPosts();
-        $count = 0;
+
+        $migratedCount = 0;
+        $criticalErrors = [];
+        $validationErrors = [];
 
         foreach ($posts as $post) {
-            if ($this->isValid($post) && !$this->exists($post->getId())) {
+            if (!$this->isValid($post)){
+                $validationErrors[] = "Post №{$post->getId()} is not valid";
+                continue;
+            }
+            if ($this->exists($post->getId())) {
+                $validationErrors[] = "Post №{$post->getId()} already exists";
+                continue;
+            }
+            try {
                 $this->dbRepo->addPost($post);
-                $count++;
+                $migratedCount++;
+            } catch (\Throwable $e) {
+                $criticalErrors[] = "Failed to migrate post №{$post->getId()}: {$e->getMessage()}";
             }
         }
 
-        return $count;
+        return new MigrationResult($migratedCount, $criticalErrors, $validationErrors);
     }
 
     private function isValid(Post $post): bool

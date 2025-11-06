@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Model\Post;
 use App\Service\PostMigrationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * CLI command to migrate posts from JSON storage to the SQL database.
@@ -46,20 +45,26 @@ class MigrateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>Starting migration...</info>');
+        $io = new SymfonyStyle($input, $output);
 
-        $count = $this->service->migrate();
+        $io->title('Post Migration Command');
+        $io->info('Starting migration...');
 
-        $output->writeln("$count posts successfully added");
+        $migrationResult = $this->service->migrate();
+
+        if($migrationResult->hasValidationErrors()){
+            $io->section('Validation Errors');
+            $io->warning(implode("\n", $migrationResult->getValidationErrors()));
+        }
+
+        if($migrationResult->hasCriticalErrors()){
+            $io->section('Critical Errors');
+            $io->error(implode("\n", $migrationResult->getCriticalErrors()));
+            return Command::FAILURE;
+        }
+
+        $io->success("{$migrationResult->getMigratedCount()} post(s) successfully added");
 
         return Command::SUCCESS;
-    }
-
-    private function postReadyToMigrate(Post $post): bool
-    {
-        if ($post->getTitle() === '' || $post->getContent() === '') {
-            return false;
-        }
-        return true;
     }
 }
