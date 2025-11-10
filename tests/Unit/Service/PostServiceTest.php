@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class PostServiceTest extends TestCase
 {
+    private const DATETIME_PATTERN = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
     public function testCreatePost(): void
     {
         $title = 'Title';
@@ -17,7 +18,8 @@ class PostServiceTest extends TestCase
         $expectedId = 29;
 
         $postRepositoryMock = $this->createMock(PostRepositoryInterface::class);
-        $postRepositoryMock->method('addPost')
+        $postRepositoryMock->expects($this->once())
+            ->method('addPost')
             ->with($this->callback(function (Post $post) use ($title, $content, $imageName)
             {
                 $this->assertNull($post->getId());
@@ -26,7 +28,7 @@ class PostServiceTest extends TestCase
                 $this->assertSame($imageName, $post->getImgName());
 
                 $this->assertMatchesRegularExpression(
-                    '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/',
+                    self::DATETIME_PATTERN,
                     $post->getDate()
                 );
 
