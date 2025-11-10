@@ -8,7 +8,7 @@ use InvalidArgumentException;
 class Post
 {
     public function __construct(
-        private int $id,
+        private ?int $id,
         private string $date,
         private string $title,
         private string $content,
@@ -37,7 +37,7 @@ class Post
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

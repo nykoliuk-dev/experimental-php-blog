@@ -11,11 +11,19 @@ use PHPUnit\Framework\TestCase;
  */
 class PostTest extends TestCase
 {
-    public function testCreatesPostWithValidData(): void
+    /**
+     * @dataProvider validIdProvider
+     */
+    public function testCreatesPostWithValidData(?int $id): void
     {
-        $post = new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg');
+        $post = new Post($id, '2025-11-07', 'Title', 'Content', 'img.jpg');
 
-        $this->assertSame(1, $post->getId());
+        if($id === null){
+            $this->assertNull($post->getId());
+        }else{
+            $this->assertSame(1, $post->getId());
+        }
+
         $this->assertSame('2025-11-07', $post->getDate());
         $this->assertSame('Title', $post->getTitle());
         $this->assertSame('Content', $post->getContent());
@@ -50,6 +58,14 @@ class PostTest extends TestCase
         $this->expectExceptionMessage('Invalid image format');
 
         new Post(1, '2025-11-07', 'Title', 'Content', $imgName);
+    }
+
+    public static function validIdProvider(): array
+    {
+        return [
+            'new post (id = null)' => [null],
+            'post exists (id = integer)' => [1],
+        ];
     }
 
     public static function invalidTitleProvider(): array
