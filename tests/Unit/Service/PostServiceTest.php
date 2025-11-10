@@ -11,14 +11,27 @@ class PostServiceTest extends TestCase
 {
     public function testCreatePost(): void
     {
-        $title = 'Test Title';
-        $content = 'Test Content';
-        $imageName = 'test.jpg';
-        $expectedId = 42;
+        $title = 'Title';
+        $content = 'Content';
+        $imageName = 'jpg.jpg';
+        $expectedId = 29;
 
         $postRepositoryMock = $this->createMock(PostRepositoryInterface::class);
         $postRepositoryMock->method('addPost')
-            ->with($this->isInstanceOf(Post::class))
+            ->with($this->callback(function (Post $post) use ($title, $content, $imageName)
+            {
+                $this->assertNull($post->getId());
+                $this->assertSame($title, $post->getTitle());
+                $this->assertSame($content, $post->getContent());
+                $this->assertSame($imageName, $post->getImgName());
+
+                $this->assertMatchesRegularExpression(
+                    '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/',
+                    $post->getDate()
+                );
+
+                return true;
+            }))
             ->willReturn($expectedId);
 
         $service = new PostService($postRepositoryMock);
