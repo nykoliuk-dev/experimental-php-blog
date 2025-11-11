@@ -7,6 +7,9 @@ use App\Repository\PostRepositoryInterface;
 use App\Service\PostService;
 use PHPUnit\Framework\TestCase;
 
+/**
+* @covers \App\Service\PostService
+*/
 class PostServiceTest extends TestCase
 {
     private const DATETIME_PATTERN = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
