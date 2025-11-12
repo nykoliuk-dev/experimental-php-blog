@@ -20,4 +20,14 @@ final class Config
     {
         return $this->env['db_path'];
     }
+
+    public function getDsn(): string
+    {
+        $driver = $this->env['DB_DRIVER'];
+        $host = $this->env['DB_HOST'];
+        $dbname = $this->env['DB_NAME'];
+        $charset = $this->env['DB_CHARSET'];
+
+        return "$driver:host=$host;dbname=$dbname;charset=$charset";
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Repository\PostRepository;
+use App\Repository\JsonPostRepository;
 use App\Service\FileUploaderInterface;
 use App\Service\LocalFileUploader;
 use DI\ContainerBuilder;
@@ -19,7 +19,7 @@ $builder = new ContainerBuilder();
 $builder->addDefinitions([
     'config' => $config,
     Environment::class => $twig,
-    PostRepository::class => DI\create()
+    JsonPostRepository::class => DI\create()
         ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),

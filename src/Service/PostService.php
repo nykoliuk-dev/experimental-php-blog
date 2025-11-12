@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\Post;
-use App\Repository\PostRepository;
+use App\Repository\PostRepositoryInterface;
 
 class PostService
 {
-    public function __construct(private PostRepository $repo)
+    public function __construct(private PostRepositoryInterface $repo)
     {
     }
 

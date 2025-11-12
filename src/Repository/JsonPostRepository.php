@@ -5,7 +5,7 @@ namespace App\Repository;
 
 use App\Model\Post;
 
-class PostRepository
+class JsonPostRepository implements PostRepositoryInterface
 {
     private string $storage;
 
