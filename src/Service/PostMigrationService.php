@@ -14,8 +14,8 @@ class PostMigrationService
      * @param PostRepositoryInterface $targetRepo Database repository (target)
     */
     public function __construct(
-        private PostRepositoryInterface $jsonRepo,
-        private PostRepositoryInterface $dbRepo
+        private PostRepositoryInterface $from,
+        private PostRepositoryInterface $to
     ) {}
 
     /**
@@ -25,7 +25,7 @@ class PostMigrationService
      */
     public function migrate(): MigrationResult
     {
-        $posts = $this->jsonRepo->getPosts();
+        $posts = $this->from->getPosts();
 
         $migratedCount = 0;
         $criticalErrors = [];
@@ -41,7 +41,7 @@ class PostMigrationService
                 continue;
             }
             try {
-                $this->dbRepo->addPost($post);
+                $this->to->addPost($post);
                 $migratedCount++;
             } catch (\Throwable $e) {
                 $criticalErrors[] = "Failed to migrate post №{$post->getId()}: {$e->getMessage()}";
@@ -58,6 +58,6 @@ class PostMigrationService
 
     private function exists(int $id): bool
     {
-        return $this->dbRepo->getPost($id) !== null;
+        return $this->to->getPost($id) !== null;
     }
 }

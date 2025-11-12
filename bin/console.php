@@ -24,7 +24,10 @@ $dbServ = new DatabaseService($pdo);
 $jsonRepo = new JsonPostRepository($config->dbPath());
 $dbRepo   = new DatabasePostRepository($dbServ);
 
-$migrationService = new \App\Service\PostMigrationService($jsonRepo, $dbRepo);
+$migrationService = new \App\Service\PostMigrationService(
+    from: $jsonRepo,
+    to: $dbRepo
+);
 
 $app = new Application('Basic Blog CLI', '1.0.0');
 $app->add(new MigrateCommand($migrationService));
