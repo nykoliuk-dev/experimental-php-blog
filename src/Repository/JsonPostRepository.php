@@ -49,9 +49,8 @@ class JsonPostRepository implements PostRepositoryInterface
         return $posts[$id] ?? null;
     }
 
-    private function newPostId(): int
+    private function newPostId(array $posts): int
     {
-        $posts = $this->getPosts();
         if (empty($posts)) {
             return 0;
         }
@@ -62,8 +61,17 @@ class JsonPostRepository implements PostRepositoryInterface
     public function addPost(Post $post): int
     {
         $posts = $this->getPosts();
-        $id = $this->newPostId();
-        $posts[$id] = $post;
+        $id = $this->newPostId($posts);
+
+        $postWithId  = new Post(
+            $id,
+            $post->getDate(),
+            $post->getTitle(),
+            $post->getContent(),
+            $post->getImgName(),
+        );
+
+        $posts[$id] = $postWithId;
         $this->savePosts($posts);
         return $id;
     }
