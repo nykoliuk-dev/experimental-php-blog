@@ -69,7 +69,7 @@ class DatabasePostRepositoryTest extends TestCase
         $this->assertSame(0, (int)$stmt->fetchColumn());
     }
 
-    public function testGetPosts(): void
+    public function testGetPostsReturnsAllSavedPosts(): void
     {
         $post1 = new Post(null, '2025-11-07', 'Title', 'Content', 'img.jpg');
         $post2 = new Post(null, '2025-11-07', 'Title2', 'Content2', 'img.jpg');
@@ -80,12 +80,14 @@ class DatabasePostRepositoryTest extends TestCase
         $actualPosts = $this->repo->getPosts();
 
         $this->assertCount(2, $actualPosts);
+        $this->assertSame(1, $firstId);
+        $this->assertSame(2, $secondId);
 
         $this->assertPostsEqual($post1, $actualPosts[0]);
         $this->assertPostsEqual($post2, $actualPosts[1]);
     }
 
-    public function testGetPost(): void
+    public function testGetPostReturnsExactPostById(): void
     {
         $post = new Post(null, '2025-11-07', 'Title', 'Content', 'img.jpg');
         $expectedId = 1;
