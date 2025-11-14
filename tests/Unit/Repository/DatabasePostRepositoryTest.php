@@ -81,8 +81,8 @@ class DatabasePostRepositoryTest extends TestCase
 
         $this->assertCount(2, $actualPosts);
 
-        $this->assertPostsEqual($post1, $actualPosts[$firstId]);
-        $this->assertPostsEqual($post2, $actualPosts[$secondId]);
+        $this->assertPostsEqual($post1, $actualPosts[0]);
+        $this->assertPostsEqual($post2, $actualPosts[1]);
     }
 
     public function testGetPost(): void
