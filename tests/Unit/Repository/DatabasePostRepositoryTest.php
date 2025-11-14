@@ -47,10 +47,7 @@ class DatabasePostRepositoryTest extends TestCase
         $this->assertNotNull($id);
         $this->assertIsInt($id);
 
-        $this->assertSame($post->getDate(), $actualPost->getDate());
-        $this->assertSame($post->getTitle(), $actualPost->getTitle());
-        $this->assertSame($post->getContent(), $actualPost->getContent());
-        $this->assertSame($post->getImgName(), $actualPost->getImgName());
+        $this->assertPostsEqual($post, $actualPost);
 
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM posts");
         $this->assertSame(1, (int)$stmt->fetchColumn());
@@ -84,15 +81,8 @@ class DatabasePostRepositoryTest extends TestCase
 
         $this->assertCount(2, $actualPosts);
 
-        $this->assertSame($post1->getDate(), $actualPosts[$firstId]->getDate());
-        $this->assertSame($post1->getTitle(), $actualPosts[$firstId]->getTitle());
-        $this->assertSame($post1->getContent(), $actualPosts[$firstId]->getContent());
-        $this->assertSame($post1->getImgName(), $actualPosts[$firstId]->getImgName());
-
-        $this->assertSame($post2->getDate(), $actualPosts[$secondId]->getDate());
-        $this->assertSame($post2->getTitle(), $actualPosts[$secondId]->getTitle());
-        $this->assertSame($post2->getContent(), $actualPosts[$secondId]->getContent());
-        $this->assertSame($post2->getImgName(), $actualPosts[$secondId]->getImgName());
+        $this->assertPostsEqual($post1, $actualPosts[$firstId]);
+        $this->assertPostsEqual($post2, $actualPosts[$secondId]);
     }
 
     public function testGetPost(): void
@@ -105,9 +95,14 @@ class DatabasePostRepositoryTest extends TestCase
         $actualPost = $this->repo->getPost($actualId);
 
         $this->assertSame($expectedId, $actualId);
-        $this->assertSame($post->getDate(), $actualPost->getDate());
-        $this->assertSame($post->getTitle(), $actualPost->getTitle());
-        $this->assertSame($post->getContent(), $actualPost->getContent());
-        $this->assertSame($post->getImgName(), $actualPost->getImgName());
+        $this->assertPostsEqual($post, $actualPost);
+    }
+
+    private function assertPostsEqual(Post $expected, Post $actual): void
+    {
+        $this->assertSame($expected->getDate(), $actual->getDate());
+        $this->assertSame($expected->getTitle(), $actual->getTitle());
+        $this->assertSame($expected->getContent(), $actual->getContent());
+        $this->assertSame($expected->getImgName(), $actual->getImgName());
     }
 }
