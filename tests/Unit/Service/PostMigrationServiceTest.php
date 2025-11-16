@@ -24,8 +24,8 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                $this->makePost(1),
-                $this->makePost(2, 'Title2', 'Content2'),
+                $this->makePost(id: 1),
+                $this->makePost(id: 2, title: 'Title2', content: 'Content2'),
             ]);
         $this->targetRepo->expects($this->exactly(2))
             ->method('addPost')
@@ -43,7 +43,7 @@ class PostMigrationServiceTest extends TestCase
 
     public function testMigrationWithValidationErrors(): void
     {
-        $invalidPost = $this->makeInvalidPost(1);
+        $invalidPost = $this->makeInvalidPost(id: 1);
 
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
@@ -68,7 +68,7 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                $this->makePost(1),
+                $this->makePost(id: 1),
             ]);
         $this->targetRepo->method('addPost')
             ->with($this->isInstanceOf(Post::class))
@@ -88,7 +88,7 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                $this->makePost(1),
+                $this->makePost(id: 1),
             ]);
         $this->targetRepo->method('addPost')->willThrowException(new \RuntimeException("DB error"));
         $this->targetRepo->method('getPost')
