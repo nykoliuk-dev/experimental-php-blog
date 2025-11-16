@@ -24,8 +24,8 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'),
-                new Post(2, '2025-11-07', 'Title2', 'Content2', 'img2.jpg'),
+                $this->makePost(1),
+                $this->makePost(2, 'Title2', 'Content2'),
             ]);
         $this->targetRepo->expects($this->exactly(2))
             ->method('addPost')
@@ -34,9 +34,7 @@ class PostMigrationServiceTest extends TestCase
         $this->targetRepo->method('getPost')
             ->willReturn(null);
 
-        $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
-
-        $result = $service->migrate();
+        $result = $this->migrate();
 
         $this->assertSame(2, $result->getMigratedCount());
         $this->assertSame([], $result->getValidationErrors());
@@ -45,10 +43,7 @@ class PostMigrationServiceTest extends TestCase
 
     public function testMigrationWithValidationErrors(): void
     {
-        $invalidPost = $this->createMock(Post::class);
-        $invalidPost->method('getId')->willReturn(1);
-        $invalidPost->method('getTitle')->willReturn('');
-        $invalidPost->method('getContent')->willReturn('Content');
+        $invalidPost = $this->makeInvalidPost(1);
 
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
@@ -61,9 +56,7 @@ class PostMigrationServiceTest extends TestCase
         $this->targetRepo->method('getPost')
             ->willReturn(null);
 
-        $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
-
-        $result = $service->migrate();
+        $result = $this->migrate();
 
         $this->assertSame(0, $result->getMigratedCount());
         $this->assertSame(["Post №1 is not valid"], $result->getValidationErrors());
@@ -75,7 +68,7 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'),
+                $this->makePost(1),
             ]);
         $this->targetRepo->method('addPost')
             ->with($this->isInstanceOf(Post::class))
@@ -83,9 +76,7 @@ class PostMigrationServiceTest extends TestCase
         $this->targetRepo->method('getPost')
             ->willReturn(new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'));
 
-        $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
-
-        $result = $service->migrate();
+        $result = $this->migrate();
 
         $this->assertSame(0, $result->getMigratedCount());
         $this->assertSame(["Post №1 already exists"], $result->getValidationErrors());
@@ -97,18 +88,39 @@ class PostMigrationServiceTest extends TestCase
         $this->sourceRepo->expects($this->once())
             ->method('getPosts')
             ->willReturn([
-                new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'),
+                $this->makePost(1),
             ]);
         $this->targetRepo->method('addPost')->willThrowException(new \RuntimeException("DB error"));
         $this->targetRepo->method('getPost')
             ->willReturn(null);
 
-        $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
-
-        $result = $service->migrate();
+        $result = $this->migrate();
 
         $this->assertSame(0, $result->getMigratedCount());
         $this->assertSame([], $result->getValidationErrors());
         $this->assertSame(['Failed to migrate post №1: DB error'], $result->getCriticalErrors());
+    }
+
+    private function makePost(
+        int $id,
+        string $title = 'Title',
+        string $content = 'Content'
+    ): Post {
+        return new Post($id, '2025-11-07', $title, $content, 'img.jpg');
+    }
+
+    private function makeInvalidPost(int $id): Post
+    {
+        $post = $this->createMock(Post::class);
+        $post->method('getId')->willReturn($id);
+        $post->method('getTitle')->willReturn('');
+        $post->method('getContent')->willReturn('');
+        return $post;
+    }
+
+    private function migrate(): MigrationResult
+    {
+        $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
+        return $service->migrate();
     }
 }
