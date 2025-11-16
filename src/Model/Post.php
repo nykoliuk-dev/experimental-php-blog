@@ -7,6 +7,8 @@ use InvalidArgumentException;
 
 class Post
 {
+    private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'heic'];
+
     public function __construct(
         private ?int $id,
         private string $date,
@@ -32,7 +34,9 @@ class Post
             throw new InvalidArgumentException('Content cannot be empty');
         }
 
-        if (!preg_match('/\.(jpg|jpeg|png|gif|webp|avif|heic)$/i', $this->imageName)) {
+        $escaped = implode('|', array_map('preg_quote', self::SUPPORTED_IMAGE_FORMATS));
+
+        if (!preg_match('/\.(' . $escaped . ')$/i', $this->imageName)) {
             throw new InvalidArgumentException('Invalid image format');
         }
     }
