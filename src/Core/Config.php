@@ -18,7 +18,7 @@ final class Config
 
     public function dbPath(): string
     {
-        return $this->env['db_path'];
+        return $this->root . $this->env['DB_PATH'];
     }
 
     public function getDsn(): string
