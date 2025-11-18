@@ -1,7 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use App\Repository\DatabasePostRepository;
 use App\Repository\JsonPostRepository;
+use App\Repository\PostRepositoryInterface;
+use App\Service\FileMover;
+use App\Service\FileMoverInterface;
 use App\Service\FileUploaderInterface;
 use App\Service\LocalFileUploader;
 use DI\ContainerBuilder;
@@ -17,12 +21,26 @@ session_start();
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions([
+    PDO::class => function () use ($config) {
+        $dsn = $config->getDsn();
+        $user = $config->env['DB_USER'];
+        $pass = $config->env['DB_PASS'];
+
+        $pdo = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+
+        return $pdo;
+    },
     'config' => $config,
     Environment::class => $twig,
     JsonPostRepository::class => DI\create()
         ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
+    PostRepositoryInterface::class => DI\get(DatabasePostRepository::class),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
+    FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
         ->constructor($config->gallery),
 ]);

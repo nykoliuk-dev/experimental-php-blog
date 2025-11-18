@@ -14,14 +14,12 @@ class PostService
 
     public function createPost(string $title, string $content, string $imageName): int
     {
-        $id = $this->repo->newPostId();
-
         $post = new Post(
-            $id,
-            date('Y-m-d H:i:s'),
-            $title,
-            $content,
-            $imageName,
+            id: null,
+            date: date('Y-m-d H:i:s'),
+            title: $title,
+            content: $content,
+            imageName: $imageName,
         );
 
         return $this->repo->addPost($post);

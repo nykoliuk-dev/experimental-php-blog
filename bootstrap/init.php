@@ -16,26 +16,23 @@ $dotenv->required('DB_PATH')->notEmpty();
 
 $paths = require $root . '/config/paths.php';
 
-$env = require $root . '/config/env.php';
-$env['db_path'] = $paths['root'] . $env['db_path'];
-
 require_once $paths['helpers'] . '/functions.php';
 
 $config = new Config(
-    $paths['root'],
-    $paths['cache'],
-    $paths['config'],
-    $paths['app'],
-    $paths['view'],
-    $paths['helpers'],
-    $paths['gallery'],
-    $env
+    root: $paths['root'],
+    cache: $paths['cache'],
+    configDir: $paths['config'],
+    app: $paths['app'],
+    view: $paths['view'],
+    helpers: $paths['helpers'],
+    gallery: $paths['gallery'],
+    env: $_ENV,
 );
 
 $loader = new FilesystemLoader($paths['view']);
 $twig = new Environment($loader, [
     'cache' => $paths['cache'] . '/twig',
-    'debug' => $env['debug'],
+    'debug' => (bool)$_ENV['DEBUG'],
 ]);
 
 return [

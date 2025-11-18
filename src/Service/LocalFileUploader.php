@@ -5,9 +5,10 @@ namespace App\Service;
 
 final class LocalFileUploader implements FileUploaderInterface
 {
-    public function __construct(private string $uploadDir)
-    {
-    }
+    public function __construct(
+        private string             $uploadDir,
+        private FileMoverInterface $mover
+    ) {}
 
     public function upload(array $file): string
     {
@@ -25,7 +26,7 @@ final class LocalFileUploader implements FileUploaderInterface
         $uniqueName = uniqid('img_', true) . '.' . $ext;
         $targetPath = rtrim($this->uploadDir, '/') . '/' . $uniqueName;
 
-        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        if (!$this->mover->move($file['tmp_name'], $targetPath)) {
             throw new \RuntimeException('Failed to save file.');
         }
 
