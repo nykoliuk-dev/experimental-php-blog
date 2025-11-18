@@ -15,11 +15,11 @@ class PostService
     public function createPost(string $title, string $content, string $imageName): int
     {
         $post = new Post(
-            null,
-            date('Y-m-d H:i:s'),
-            $title,
-            $content,
-            $imageName,
+            id: null,
+            date: date('Y-m-d H:i:s'),
+            title: $title,
+            content: $content,
+            imageName: $imageName,
         );
 
         return $this->repo->addPost($post);
