@@ -31,11 +31,14 @@ class DatabasePostRepository implements PostRepositoryInterface
 
     public function addPost(Post $post): int
     {
-        $sql = "INSERT INTO `posts` (date, title, content, image_name) 
-        VALUES (:date, :title, :content, :image_name)";
+        $sql = "INSERT INTO `posts` (user_id, date, title, slug, content, image_name) 
+        VALUES (:user_id, :date, :title, :slug, :content, :image_name)";
+
         $this->db->query($sql, [
+            'user_id' => $post->getUserId(),
             'date' => $post->getDate(),
             'title' => $post->getTitle(),
+            'slug' => $post->getSlug(),
             'content' => $post->getContent(),
             'image_name' => $post->getImgName(),
         ]);
@@ -52,12 +55,16 @@ class DatabasePostRepository implements PostRepositoryInterface
 
     private function mapRowToPost(array $row): Post
     {
+        $userId = !empty($row['user_id']) ? (int)$row['user_id'] : null;
+
         return new Post(
-            (int)$row['id'],
-            $row['date'],
-            $row['title'],
-            $row['content'],
-            $row['image_name']
+            id: (int)$row['id'],
+            userId: $userId,
+            date: $row['date'],
+            title: $row['title'],
+            slug: $row['slug'],
+            content: $row['content'],
+            imageName: $row['image_name']
         );
     }
 }
