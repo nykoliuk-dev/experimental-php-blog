@@ -11,8 +11,10 @@ class Post
 
     public function __construct(
         private ?int $id,
+        private ?int $userId,
         private string $date,
         private string $title,
+        private string $slug,
         private string $content,
         private string $imageName,
     )
@@ -34,6 +36,10 @@ class Post
             throw new InvalidArgumentException('Content cannot be empty');
         }
 
+        if (!preg_match('/^[a-z0-9-]+$/', $this->slug)) {
+            throw new InvalidArgumentException('Invalid slug format');
+        }
+
         $escaped = implode('|', array_map('preg_quote', self::SUPPORTED_IMAGE_FORMATS));
 
         if (!preg_match('/\.(' . $escaped . ')$/i', $this->imageName)) {
@@ -45,14 +51,27 @@ class Post
     {
         return $this->id;
     }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
     public function getDate(): string
     {
         return $this->date;
     }
+
     public function getTitle(): string
     {
         return $this->title;
     }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
     public function getContent(): string
     {
         return $this->content;
