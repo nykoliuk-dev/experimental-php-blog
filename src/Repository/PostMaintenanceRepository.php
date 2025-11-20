@@ -20,7 +20,6 @@ class PostMaintenanceRepository implements PostMaintenanceRepositoryInterface
      */
     public function getPostsWithoutSlug(): array
     {
-        // Выбираем посты, где slug - NULL или пустая строка
         $sql = "SELECT id, title FROM `posts` WHERE slug IS NULL OR slug = ''";
         return $this->db->fetchAll($sql);
     }
