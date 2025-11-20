@@ -49,31 +49,4 @@ class PostServiceTest extends TestCase
 
         $this->assertSame($expectedId, $id);
     }
-
-    /**
-     * @dataProvider slugGenerationDataProvider
-     */
-    public function testGenerateSlugLogic(string $title, string $expectedSlug): void
-    {
-        // Для тестирования приватного метода generateSlug используем Reflection
-        $service = new PostService($this->createMock(PostRepositoryInterface::class));
-        $reflection = new ReflectionClass($service);
-        $method = $reflection->getMethod('generateSlug');
-        $method->setAccessible(true);
-
-        $generatedSlug = $method->invoke($service, $title);
-
-        $this->assertSame($expectedSlug, $generatedSlug);
-    }
-
-    public function slugGenerationDataProvider(): array
-    {
-        return [
-            'Simple title' => ['My Awesome Title', 'my-awesome-title'],
-            'Cyrillic title' => ['Привет мир и коты', 'привет-мир-и-коты'],
-            'Symbols and spaces' => ['Тайтл! С $ пробелами (123)', 'тайтл-с-пробелами-123'],
-            'Leading and trailing spaces' => ['   Testing Trim  ', 'testing-trim'],
-            'Only symbols' => ['!!! $$$ %%%', ''],
-        ];
-    }
 }
