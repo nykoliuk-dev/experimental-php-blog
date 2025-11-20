@@ -63,8 +63,8 @@ class UpdateSlugsCommand extends Command
             return Command::FAILURE;
         }
 
-        if ($result->getMigratedCount() > 0) {
-            $io->success("Successfully updated {$result->getMigratedCount()} post slug(s).");
+        if ($result->getSuccessCount() > 0) {
+            $io->success("Successfully updated {$result->getSuccessCount()} post slug(s).");
         } else {
             $io->success("No posts found requiring slug updates. All done!");
         }

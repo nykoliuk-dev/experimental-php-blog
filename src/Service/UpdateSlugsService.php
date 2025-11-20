@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\MigrationResult;
+use App\DTO\OperationResult;
 use App\Repository\PostMaintenanceRepositoryInterface;
 use Throwable;
 
@@ -18,9 +18,9 @@ class UpdateSlugsService
 
     /**
      * Updates the slug for all posts that are missing one.
-     * * @return MigrationResult Result of the operation (number of updated posts and errors).
+     * * @return OperationResult Result of the operation (number of updated posts and errors).
      */
-    public function updateMissingSlugs(): MigrationResult
+    public function updateMissingSlugs(): OperationResult
     {
         $postsToUpdate = $this->repo->getPostsWithoutSlug();
 
@@ -51,7 +51,7 @@ class UpdateSlugsService
             }
         }
 
-        return new MigrationResult($updatedCount, $criticalErrors, $validationErrors);
+        return new OperationResult($updatedCount, $criticalErrors, $validationErrors);
     }
 
     /**

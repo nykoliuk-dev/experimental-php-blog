@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\MigrationResult;
+use App\DTO\OperationResult;
 use App\Model\Post;
 use App\Repository\PostRepositoryInterface;
 
@@ -21,9 +21,9 @@ class PostMigrationService
     /**
      * Migrates posts from JSON to the database.
      *
-     * @return MigrationResult Result object containing success count and errors.
+     * @return OperationResult Result object containing success count and errors.
      */
-    public function migrate(): MigrationResult
+    public function migrate(): OperationResult
     {
         $posts = $this->from->getPosts();
 
@@ -48,7 +48,7 @@ class PostMigrationService
             }
         }
 
-        return new MigrationResult($migratedCount, $criticalErrors, $validationErrors);
+        return new OperationResult($migratedCount, $criticalErrors, $validationErrors);
     }
 
     private function isValid(Post $post): bool

@@ -2,7 +2,7 @@
 
 namespace Unit\Service;
 
-use App\DTO\MigrationResult;
+use App\DTO\OperationResult;
 use App\Model\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\PostMigrationService;
@@ -36,7 +36,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(2, $result->getMigratedCount());
+        $this->assertSame(2, $result->getSuccessCount());
         $this->assertSame([], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -58,7 +58,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame(["Post №1 is not valid"], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -78,7 +78,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame(["Post №1 already exists"], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -96,7 +96,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame([], $result->getValidationErrors());
         $this->assertSame(['Failed to migrate post №1: DB error'], $result->getCriticalErrors());
     }
@@ -118,7 +118,7 @@ class PostMigrationServiceTest extends TestCase
         return $post;
     }
 
-    private function migrate(): MigrationResult
+    private function migrate(): OperationResult
     {
         $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
         return $service->migrate();
