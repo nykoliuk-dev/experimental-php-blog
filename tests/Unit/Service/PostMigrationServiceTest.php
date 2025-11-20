@@ -25,7 +25,7 @@ class PostMigrationServiceTest extends TestCase
             ->method('getPosts')
             ->willReturn([
                 $this->makePost(id: 1),
-                $this->makePost(id: 2, title: 'Title2', content: 'Content2'),
+                $this->makePost(id: 2, title: 'Title2', slug: 'test-slug2', content: 'Content2'),
             ]);
         $this->targetRepo->expects($this->exactly(2))
             ->method('addPost')
@@ -74,7 +74,7 @@ class PostMigrationServiceTest extends TestCase
             ->with($this->isInstanceOf(Post::class))
             ->willReturnCallback(fn(Post $p) => $p->getId());
         $this->targetRepo->method('getPost')
-            ->willReturn(new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'));
+            ->willReturn($this->makePost(id: 1));
 
         $result = $this->migrate();
 
@@ -104,9 +104,18 @@ class PostMigrationServiceTest extends TestCase
     private function makePost(
         int $id,
         string $title = 'Title',
+        string $slug = 'test-slug',
         string $content = 'Content'
     ): Post {
-        return new Post($id, '2025-11-07', $title, $content, 'img.jpg');
+        return new Post(
+            id: $id,
+            userId: null,
+            date: '2025-11-07',
+            title: $title,
+            slug: $slug,
+            content: $content,
+            imageName: 'img.jpg'
+        );
     }
 
     private function makeInvalidPost(int $id): Post
