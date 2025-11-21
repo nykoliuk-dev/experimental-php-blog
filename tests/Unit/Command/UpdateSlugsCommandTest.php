@@ -2,7 +2,6 @@
 
 namespace Command;
 
-use App\Command\MigrateCommand;
 use App\Command\UpdateSlugsCommand;
 use App\DTO\OperationResult;
 use App\Service\UpdateSlugsService;
@@ -10,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * @covers \App\Command\UpdateSlugsCommand
+ */
 class UpdateSlugsCommandTest extends TestCase
 {
     public function testUpdateSlugsSuccess(): void
