@@ -9,6 +9,9 @@ use App\Service\PostMigrationService;
 use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\callback;
 
+/**
+ * @covers \App\Service\PostMigrationService
+ */
 class PostMigrationServiceTest extends TestCase
 {
     protected PostRepositoryInterface $sourceRepo;
