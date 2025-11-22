@@ -20,7 +20,7 @@ return function (RouteCollector $r): void {
     $r->addRoute('POST', '/posts', [PostController::class, 'store']);
 
     // Auth — Registration
-    $r->addRoute('GET', '/register', [RegisterController::class, 'showForm']);
+    $r->addRoute('GET', '/register', [RegisterController::class, 'showRegisterForm']);
     $r->addRoute('POST', '/register', [RegisterController::class, 'register']);
 
     // Auth — Login
