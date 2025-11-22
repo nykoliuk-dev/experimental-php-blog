@@ -24,7 +24,7 @@ return function (RouteCollector $r): void {
     $r->addRoute('POST', '/register', [RegisterController::class, 'register']);
 
     // Auth — Login
-    $r->addRoute('GET', '/login', [LoginController::class, 'showForm']);
+    $r->addRoute('GET', '/login', [LoginController::class, 'showLoginForm']);
     $r->addRoute('POST', '/login', [LoginController::class, 'login']);
 
     // Auth — Logout
