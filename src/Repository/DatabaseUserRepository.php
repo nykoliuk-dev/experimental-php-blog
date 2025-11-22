@@ -34,7 +34,7 @@ class DatabaseUserRepository implements UserRepositoryInterface
         return $data ? $this->mapRowToUser($data) : null;
     }
 
-    public function addUser(User $user): int
+    public function addUser(User $user): ?User
     {
         $sql = "INSERT INTO `users` (username, email, password_hash, created_at)
                 VALUES (:username, :email, :password_hash, :created_at)";
@@ -46,7 +46,8 @@ class DatabaseUserRepository implements UserRepositoryInterface
             'created_at' => $user->getCreatedAt(),
         ]);
 
-        return $this->db->lastInsertId();
+        $id = $this->db->lastInsertId();
+        return $this->getUserById($id);
     }
 
     private function mapRowToUser(array $row): User
