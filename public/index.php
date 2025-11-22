@@ -2,8 +2,10 @@
 declare(strict_types=1);
 
 use App\Repository\DatabasePostRepository;
+use App\Repository\DatabaseUserRepository;
 use App\Repository\JsonPostRepository;
 use App\Repository\PostRepositoryInterface;
+use App\Repository\UserRepositoryInterface;
 use App\Service\FileMover;
 use App\Service\FileMoverInterface;
 use App\Service\FileUploaderInterface;
@@ -39,6 +41,7 @@ $builder->addDefinitions([
         ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
     PostRepositoryInterface::class => DI\get(DatabasePostRepository::class),
+    UserRepositoryInterface::class => DI\get(DatabaseUserRepository::class),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
     FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
