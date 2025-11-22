@@ -12,7 +12,7 @@ class LoginValidator
     public function validate(array $data): array
     {
         $validation = $this->validator->make($data, [
-            'name'   => 'required|min:2',
+            'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
         $validation->validate();
