@@ -13,6 +13,14 @@ class AuthService
     }
     public function register(string $username, string $email, string $password): User
     {
+        if ($this->repo->getUserByEmail($email)) {
+            throw new \RuntimeException("Email already taken");
+        }
+
+        if ($this->repo->getUserByUsername($username)) {
+            throw new \RuntimeException("Username already taken");
+        }
+
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
         $user = new User(
             id: null,
@@ -25,32 +33,22 @@ class AuthService
         return $this->repo->addUser($user);
     }
 
-    public function existsByUsername(string $username): bool
-    {
-        return $this->repo->getUserByUsername($username) !== null;
-    }
-
-    public function existsByEmail(string $email): bool
-    {
-        return $this->repo->getUserByEmail($email) !== null;
-    }
-
     public function login(string $email, string $password): User
     {
-        // ...
+        $user = $this->repo->getUserByEmail($email);
+
+        if (!$user) {
+            throw new \RuntimeException("User not found");
+        }
+
+        if (!password_verify($password, $user->getPasswordHash())) {
+            throw new \RuntimeException("Invalid password");
+        }
+
+        return $user;
     }
 
     public function logout(): void
-    {
-        // ...
-    }
-
-    public function verifyEmail(string $token): void
-    {
-        // ...
-    }
-
-    public function restorePassword(string $email): void
     {
         // ...
     }
