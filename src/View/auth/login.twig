@@ -4,7 +4,7 @@
     <header class="row tm-welcome-section">
         <h2 class="col-12 text-center tm-section-title">Login</h2>
         <p class="col-12 text-center">
-            Enter your credentials to access your account.
+            Enter your email and password to access your account.
         </p>
     </header>
 
@@ -15,15 +15,25 @@
                     <div id="form-messages"></div>
 
                     <div class="form-group">
-                        <input type="text" name="username" class="form-control" placeholder="Username or Email" required>
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="Email"
+                               required>
                     </div>
 
                     <div class="form-group">
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Password"
+                               required>
                     </div>
 
                     <div class="form-group tm-d-flex">
-                        <button type="submit" class="tm-btn tm-btn-success tm-btn-right">Login</button>
+                        <button type="submit" class="tm-btn tm-btn-success tm-btn-right">
+                            Login
+                        </button>
                     </div>
                 </form>
             </div>
@@ -38,24 +48,22 @@
                 e.preventDefault();
 
                 let form = $(this);
-                let formData = form.serialize();
                 let messages = $('#form-messages');
 
                 $.ajax({
                     url: '/login',
                     type: 'POST',
-                    data: formData,
+                    data: form.serialize(),
                     success: function (response) {
                         messages
                             .removeClass('tm-text-danger')
                             .addClass('tm-text-success')
-                            .html(`${response.message}`);
+                            .html(response.message);
 
-                        form[0].reset();
-
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
+                        // Просто редирект после успешного входа
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 800);
                     },
                     error: function (xhr) {
                         let res = xhr.responseJSON;
@@ -63,15 +71,13 @@
 
                         if (res && res.errors) {
                             let html = '<ul>';
-                            for (const [field, errors] of Object.entries(res.errors)) {
-                                html += `<li>${errors.join('<br>')}</li>`;
+                            for (const err of res.errors) {
+                                html += `<li>${err}</li>`;
                             }
                             html += '</ul>';
                             messages.html(html);
-                        } else if (res && res.message) {
-                            messages.html(res.message);
                         } else {
-                            messages.html('<p>An error occurred while submitting the form.</p>');
+                            messages.html('<p>Произошла ошибка при авторизации.</p>');
                         }
                     }
                 });
