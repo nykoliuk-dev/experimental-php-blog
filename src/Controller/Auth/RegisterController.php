@@ -22,30 +22,33 @@ class RegisterController extends Controller
 
         $errors = $validator->validate($_POST);
 
-        if($authService->existsByUsername($_POST['name'])){
-            $errors[] = "User name: {$_POST['name']} already exists";
-        }
-        if($authService->existsByEmail($_POST['email'])){
-            $errors[] = "User with email: {$_POST['email']} already exists";
-        }
-
         if ($errors) {
             http_response_code(422);
             echo json_encode(['success' => false, 'errors' => $errors]);
             return;
         }
 
-        $user = $authService->register(
-            username: $_POST['name'],
-            email: $_POST['email'],
-            password: $_POST['password'],
-        );
+        try {
+            $user = $authService->register(
+                username: $_POST['name'],
+                email: $_POST['email'],
+                password: $_POST['password'],
+            );
 
-        echo json_encode([
-            'success' => true,
-            'message' => 'Registration successful',
-            'user_id' => $user->getId(),
-        ]);
-        exit;
+            echo json_encode([
+                'success' => true,
+                'message' => 'Registration successful',
+                'user_id' => $user->getId(),
+            ]);
+
+        } catch (\RuntimeException $e) {
+
+            http_response_code(422);
+
+            echo json_encode([
+                'success' => false,
+                'errors' => [$e->getMessage()]
+            ]);
+        }
     }
 }
