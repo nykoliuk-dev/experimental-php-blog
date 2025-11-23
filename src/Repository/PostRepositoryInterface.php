@@ -15,4 +15,8 @@ interface PostRepositoryInterface
     public function addPost(Post $post): int;
 
     public function removePost(int $id): bool;
+
+    public function setTags(int $postId, array $tagIds): void;
+
+    public function setCategories(int $postId, array $categoryIds): void;
 }
