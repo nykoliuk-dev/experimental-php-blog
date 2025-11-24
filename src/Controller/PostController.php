@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Core\Controller;
 use App\Service\FileUploaderInterface;
+use App\Service\PostFacade;
 use App\Service\PostService;
 use App\Validation\PostValidator;
 
@@ -19,20 +20,22 @@ class PostController extends Controller
             'posts' => $posts,
         ]);
     }
-    public function show(array $params): void
+    public function show(array $params, PostFacade $facade): void
     {
         $id = (int)$params['id'];
-        $post = $this->repo->getPost($id);
+        $postFullData = $facade->getPostWithRelations($id);
 
-        if (!$post) {
+        if (!$postFullData) {
             http_response_code(404);
             echo 'Пост не найден';
             return;
         }
 
         $this->render('posts/show', [
-            'title' => $post->getTitle(),
-            'post'  => $post,
+            'title' => $postFullData->getPost()->getTitle(),
+            'post' => $postFullData->getPost(),
+            'tags' => $postFullData->getTags(),
+            'categories' => $postFullData->getCategories(),
         ]);
     }
     public function create(): void
