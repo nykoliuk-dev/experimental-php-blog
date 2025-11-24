@@ -53,6 +53,36 @@ class DatabasePostRepository implements PostRepositoryInterface
         return $stmt->rowCount() > 0;
     }
 
+    public function setTags(int $postId, array $tagIds): void
+    {
+        $sqlDelete = "DELETE FROM `post_tag` WHERE `post_id` = (:post_id)";
+        $this->db->query($sqlDelete, ['post_id' => $postId]);
+
+        foreach ($tagIds as $tagId) {
+            $sql = "INSERT INTO `post_tag` (post_id, tag_id) VALUES (:post_id, :tag_id)";
+
+            $this->db->query($sql, [
+                'post_id' => $postId,
+                'tag_id' => $tagId,
+            ]);
+        }
+    }
+
+    public function setCategories(int $postId, array $categoryIds): void
+    {
+        $sqlDelete = "DELETE FROM `category_post` WHERE `post_id` = (:post_id)";
+        $this->db->query($sqlDelete, ['post_id' => $postId]);
+
+        foreach ($categoryIds as $categoryId) {
+            $sql = "INSERT INTO `category_post` (category_id, post_id) VALUES (:category_id, :post_id)";
+
+            $this->db->query($sql, [
+                'category_id' => $categoryId,
+                'post_id' => $postId,
+            ]);
+        }
+    }
+
     private function mapRowToPost(array $row): Post
     {
         $userId = !empty($row['user_id']) ? (int)$row['user_id'] : null;
