@@ -53,7 +53,7 @@ class DatabasePostRepository implements PostRepositoryInterface
         return $stmt->rowCount() > 0;
     }
 
-    public function setTags(int $postId, array $tagIds): void
+    public function setPostTags(int $postId, array $tagIds): void
     {
         $sqlDelete = "DELETE FROM `post_tag` WHERE `post_id` = (:post_id)";
         $this->db->query($sqlDelete, ['post_id' => $postId]);
@@ -68,7 +68,7 @@ class DatabasePostRepository implements PostRepositoryInterface
         }
     }
 
-    public function setCategories(int $postId, array $categoryIds): void
+    public function setPostCategories(int $postId, array $categoryIds): void
     {
         $sqlDelete = "DELETE FROM `category_post` WHERE `post_id` = (:post_id)";
         $this->db->query($sqlDelete, ['post_id' => $postId]);
@@ -81,6 +81,28 @@ class DatabasePostRepository implements PostRepositoryInterface
                 'post_id' => $postId,
             ]);
         }
+    }
+
+    /**
+     * @return int[] List of tag IDs
+     */
+    public function getPostTags(int $postId): array
+    {
+        $sql = "SELECT * FROM `post_tag` WHERE `post_id` = (:post_id)";
+        $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
+
+        return array_column($rows, 'tag_id');
+    }
+
+    /**
+     * @return int[] List of category IDs
+     */
+    public function getPostCategories(int $postId): array
+    {
+        $sql = "SELECT * FROM `category_post` WHERE `post_id` = (:post_id)";
+        $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
+
+        return array_column($rows, 'category_id');
     }
 
     private function mapRowToPost(array $row): Post
