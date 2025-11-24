@@ -88,7 +88,7 @@ class DatabasePostRepository implements PostRepositoryInterface
      */
     public function getPostTags(int $postId): array
     {
-        $sql = "SELECT * FROM `post_tag` WHERE `post_id` = (:post_id)";
+        $sql = "SELECT `tag_id` FROM `post_tag` WHERE `post_id` = (:post_id)";
         $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
 
         return array_column($rows, 'tag_id');
@@ -99,7 +99,7 @@ class DatabasePostRepository implements PostRepositoryInterface
      */
     public function getPostCategories(int $postId): array
     {
-        $sql = "SELECT * FROM `category_post` WHERE `post_id` = (:post_id)";
+        $sql = "SELECT `category_id` FROM `category_post` WHERE `post_id` = (:post_id)";
         $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
 
         return array_column($rows, 'category_id');
