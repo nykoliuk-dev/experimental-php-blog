@@ -12,7 +12,9 @@ use App\Service\DatabaseService;
 
 class DatabasePostRepository implements PostRepositoryInterface
 {
-    public function __construct(private DatabaseService $db) {}
+    public function __construct(private DatabaseService $db)
+    {
+    }
 
     public function getPosts(): array
     {
@@ -57,55 +59,60 @@ class DatabasePostRepository implements PostRepositoryInterface
         return $stmt->rowCount() > 0;
     }
 
-    /** @param TagId[] $tagIds */
-    public function setPostTags(PostId $postId, array $tagIds): void
+    public function clearPostTags(PostId $postId): bool
     {
-        $this->db->beginTransaction();
+        $sqlDelete = "DELETE FROM `post_tag` WHERE `post_id` = (:post_id)";
+        $stmt = $this->db->query($sqlDelete, ['post_id' => $postId->value()]);
+        return $stmt->rowCount() > 0;
+    }
 
-        try {
-            $sqlDelete = "DELETE FROM `post_tag` WHERE `post_id` = (:post_id)";
-            $this->db->query($sqlDelete, ['post_id' => $postId->value()]);
+    public function clearPostCategories(PostId $postId): bool
+    {
+        $sqlDelete = "DELETE FROM `category_post` WHERE `post_id` = (:post_id)";
+        $stmt = $this->db->query($sqlDelete, ['post_id' => $postId->value()]);
+        return $stmt->rowCount() > 0;
+    }
 
-            foreach ($tagIds as $tagId) {
-                $sql = "INSERT INTO `post_tag` (post_id, tag_id) VALUES (:post_id, :tag_id)";
-
-                $this->db->query($sql, [
-                    'post_id' => $postId->value(),
-                    'tag_id' => $tagId->value(),
-                ]);
-            }
-
-            $this->db->commit();
-        } catch (\Throwable $e) {
-            $this->db->rollBack();
-            throw $e;
+    /** @param TagId[] $tagIds */
+    public function addPostTags(PostId $postId, array $tagIds): void
+    {
+        if (empty($tagIds)) {
+            return;
         }
+
+        $values = [];
+        $params = [];
+
+        foreach ($tagIds as $i => $tagId) {
+            $values[] = "(:post_id_$i, :tag_id_$i)";
+            $params["post_id_$i"] = $postId->value();
+            $params["tag_id_$i"]  = $tagId->value();
+        }
+
+        $sql = "INSERT INTO `post_tag` (post_id, tag_id) VALUES " . implode(', ', $values);
+
+        $this->db->query($sql, $params);
     }
 
     /** @param CategoryId[] $categoryIds */
-    public function setPostCategories(PostId $postId, array $categoryIds): void
+    public function addPostCategories(PostId $postId, array $categoryIds): void
     {
-        $this->db->beginTransaction();
-
-        try {
-            $sqlDelete = "DELETE FROM `category_post` WHERE `post_id` = (:post_id)";
-            $this->db->query($sqlDelete, ['post_id' => $postId->value()]);
-
-            foreach ($categoryIds as $categoryId) {
-                $sql = "INSERT INTO `category_post` (category_id, post_id) VALUES (:category_id, :post_id)";
-
-                $this->db->query($sql, [
-                    'category_id' => $categoryId->value(),
-                    'post_id' => $postId->value(),
-                ]);
-            }
-
-            $this->db->commit();
-        } catch (\Throwable $e) {
-            $this->db->rollBack();
-            throw $e;
+        if (empty($categoryIds)) {
+            return;
         }
 
+        $values = [];
+        $params = [];
+
+        foreach ($categoryIds as $i => $categoryId) {
+            $values[] = "(:post_id_$i, :category_id_$i)";
+            $params["category_id_$i"]  = $categoryId->value();
+            $params["post_id_$i"] = $postId->value();
+        }
+
+        $sql = "INSERT INTO `category_post` (category_id, post_id) VALUES " . implode(', ', $values);
+
+        $this->db->query($sql, $params);
     }
 
     private function mapRowToPost(array $row): Post
