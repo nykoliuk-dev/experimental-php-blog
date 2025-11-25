@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\UserId;
 use InvalidArgumentException;
 
 class User
 {
     public function __construct(
-        private ?int $id,
+        private ?UserId $id,
         private string $username,
         private string $email,
         private string $passwordHash,
@@ -37,7 +38,7 @@ class User
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?UserId
     {
         return $this->id;
     }

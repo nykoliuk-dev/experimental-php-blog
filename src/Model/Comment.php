@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\CommentId;
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use InvalidArgumentException;
 
 class Comment
 {
     public function __construct(
-        private ?int $id,
-        private int $postId,
-        private ?int $userId,
+        private ?CommentId $id,
+        private PostId $postId,
+        private ?UserId $userId,
         private string $content,
         private string $createdAt,
     )
@@ -33,17 +36,17 @@ class Comment
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?CommentId
     {
         return $this->id;
     }
 
-    public function getPostId(): int
+    public function getPostId(): PostId
     {
         return $this->postId;
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): ?UserId
     {
         return $this->userId;
     }

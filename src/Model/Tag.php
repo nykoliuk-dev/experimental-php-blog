@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\TagId;
 use InvalidArgumentException;
 
 class Tag
 {
     public function __construct(
-        private ?int $id,
+        private ?TagId $id,
         private string $name,
         private string $slug,
     )
@@ -31,7 +32,7 @@ class Tag
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?TagId
     {
         return $this->id;
     }

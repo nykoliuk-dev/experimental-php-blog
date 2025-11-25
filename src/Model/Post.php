@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use InvalidArgumentException;
 
 class Post
@@ -10,8 +12,8 @@ class Post
     private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'heic'];
 
     public function __construct(
-        private ?int $id,
-        private ?int $userId,
+        private ?PostId $id,
+        private ?UserId $userId,
         private string $date,
         private string $title,
         private string $slug,
@@ -47,12 +49,12 @@ class Post
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?PostId
     {
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): ?UserId
     {
         return $this->userId;
     }

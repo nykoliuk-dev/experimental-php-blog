@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\CategoryId;
 use InvalidArgumentException;
 
 class Category
 {
     public function __construct(
-        private ?int $id,
-        private ?int $parentId,
+        private ?CategoryId $id,
+        private ?CategoryId $parentId,
         private string $name,
         private string $slug,
     )
@@ -32,12 +33,12 @@ class Category
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?CategoryId
     {
         return $this->id;
     }
 
-    public function getParentId(): ?int
+    public function getParentId(): ?CategoryId
     {
         return $this->parentId;
     }
