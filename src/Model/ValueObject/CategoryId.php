@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ValueObject;
 
-class CategoryId
+final class CategoryId
 {
     public function __construct(
         private int $value
