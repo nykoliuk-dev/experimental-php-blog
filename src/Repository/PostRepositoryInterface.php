@@ -4,25 +4,20 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Post;
+use App\Model\ValueObject\PostId;
 
 interface PostRepositoryInterface
 {
     /** @return Post[] */
     public function getPosts(): array;
 
-    public function getPost(int $id): ?Post;
+    public function getPost(PostId $id): ?Post;
 
-    public function addPost(Post $post): int;
+    public function addPost(Post $post): PostId;
 
-    public function removePost(int $id): bool;
+    public function removePost(PostId $id): bool;
 
-    public function setPostTags(int $postId, array $tagIds): void;
+    public function setPostTags(PostId $postId, array $tagIds): void;
 
-    public function setPostCategories(int $postId, array $categoryIds): void;
-
-    /** @return int[]  Array of tag IDs */
-    public function getPostTags(int $postId): array;
-
-    /** @return int[]  Array of category IDs */
-    public function getPostCategories(int $postId): array;
+    public function setPostCategories(PostId $postId, array $categoryIds): void;
 }
