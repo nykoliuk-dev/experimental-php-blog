@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Model\Post;
 use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use App\Repository\PostRepositoryInterface;
 
 class PostService
@@ -13,7 +14,7 @@ class PostService
     {
     }
 
-    public function createPost(?int $userId, string $title, string $content, string $imageName): PostId
+    public function createPost(?UserId $userId, string $title, string $content, string $imageName): PostId
     {
         $slug = $this->generateSlug($title);
 
