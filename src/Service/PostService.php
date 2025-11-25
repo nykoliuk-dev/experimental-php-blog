@@ -42,9 +42,7 @@ class PostService
     }
 
     /**
-     * Простая транслитерация кириллических символов в латиницу.
-     * @param string $string
-     * @return string
+     * Simple transliteration of Cyrillic characters into Latin.
      */
     private function transliterate(string $string): string
     {
