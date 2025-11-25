@@ -17,7 +17,11 @@ interface PostRepositoryInterface
 
     public function removePost(PostId $id): bool;
 
-    public function setPostTags(PostId $postId, array $tagIds): void;
+    public function clearPostTags(PostId $postId): bool;
 
-    public function setPostCategories(PostId $postId, array $categoryIds): void;
+    public function clearPostCategories(PostId $postId): bool;
+
+    public function addPostTags(PostId $postId, array $tagIds): void;
+
+    public function addPostCategories(PostId $postId, array $categoryIds): void;
 }
