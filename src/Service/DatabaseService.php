@@ -27,17 +27,11 @@ class DatabaseService
         }
     }
 
-    /**
-     * @return Post[]
-     */
     public function fetchAll(string $sql, array $params = []): array
     {
         return $this->query($sql, $params)->fetchAll();
     }
 
-    /**
-     * @return Post[]
-     */
     public function fetchOne(string $sql, array $params = []): ?array
     {
         $row = $this->query($sql, $params)->fetch();
@@ -47,5 +41,27 @@ class DatabaseService
     public function lastInsertId(): int
     {
         return (int) $this->pdo->lastInsertId();
+    }
+
+    public function beginTransaction(): void
+    {
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->pdo->commit();
+    }
+
+    public function rollBack(): void
+    {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+    }
+
+    public function inTransaction(): bool
+    {
+        return $this->pdo->inTransaction();
     }
 }
