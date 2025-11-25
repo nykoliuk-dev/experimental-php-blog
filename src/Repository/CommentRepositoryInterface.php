@@ -15,7 +15,7 @@ interface CommentRepositoryInterface
 
     public function getComment(CommentId $id): ?Comment;
 
-    public function addComment(Comment $comment): int;
+    public function addComment(Comment $comment): CommentId;
 
     public function removeComment(CommentId $id): bool;
 }
