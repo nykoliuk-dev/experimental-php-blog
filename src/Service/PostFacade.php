@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\PostFullData;
+use App\Model\ValueObject\PostId;
 use App\Repository\CategoryRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
 use App\Repository\TagRepositoryInterface;
@@ -16,7 +17,7 @@ class PostFacade
         private TagRepositoryInterface $tagRepo,
     ) {}
 
-    public function getPostWithRelations(int $postId): ?PostFullData
+    public function getPostWithRelations(PostId $postId): ?PostFullData
     {
         $post = $this->postRepo->getPost($postId);
 
