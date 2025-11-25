@@ -71,8 +71,8 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
         $userId = !empty($row['user_id']) ? (int)$row['user_id'] : null;
 
         return new Comment(
-            id: (int)$row['id'],
-            postId: (int)$row['post_id'],
+            id: new CommentId((int)$row['id']),
+            postId: new PostId((int)$row['post_id']),
             userId: $userId,
             content: $row['content'],
             createdAt: $row['created_at'],

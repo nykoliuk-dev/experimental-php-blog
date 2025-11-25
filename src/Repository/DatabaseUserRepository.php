@@ -4,16 +4,17 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\User;
+use App\Model\ValueObject\UserId;
 use App\Service\DatabaseService;
 
 class DatabaseUserRepository implements UserRepositoryInterface
 {
     public function __construct(private DatabaseService $db) {}
 
-    public function getUserById(int $id): ?User
+    public function getUserById(UserId $id): ?User
     {
         $sql = "SELECT * FROM `users` WHERE id = :id";
-        $data = $this->db->fetchOne($sql, ['id' => $id]);
+        $data = $this->db->fetchOne($sql, ['id' => $id->value()]);
 
         return $data ? $this->mapRowToUser($data) : null;
     }
@@ -46,14 +47,14 @@ class DatabaseUserRepository implements UserRepositoryInterface
             'created_at' => $user->getCreatedAt(),
         ]);
 
-        $id = $this->db->lastInsertId();
+        $id = new UserId($this->db->lastInsertId());
         return $this->getUserById($id);
     }
 
     private function mapRowToUser(array $row): User
     {
         return new User(
-            (int)$row['id'],
+            new UserId((int)$row['id']),
             $row['username'],
             $row['email'],
             $row['password_hash'],
