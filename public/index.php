@@ -1,10 +1,16 @@
 <?php
 declare(strict_types=1);
 
+use App\Repository\CategoryRepositoryInterface;
+use App\Repository\CommentRepositoryInterface;
+use App\Repository\DatabaseCategoryRepository;
+use App\Repository\DatabaseCommentRepository;
 use App\Repository\DatabasePostRepository;
+use App\Repository\DatabaseTagRepository;
 use App\Repository\DatabaseUserRepository;
 use App\Repository\JsonPostRepository;
 use App\Repository\PostRepositoryInterface;
+use App\Repository\TagRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use App\Service\FileMover;
 use App\Service\FileMoverInterface;
@@ -42,6 +48,9 @@ $builder->addDefinitions([
     Validator::class => DI\autowire(),
     PostRepositoryInterface::class => DI\get(DatabasePostRepository::class),
     UserRepositoryInterface::class => DI\get(DatabaseUserRepository::class),
+    TagRepositoryInterface::class => DI\get(DatabaseTagRepository::class),
+    CategoryRepositoryInterface::class => DI\get(DatabaseCategoryRepository::class),
+    CommentRepositoryInterface::class => DI\get(DatabaseCommentRepository::class),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
     FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
