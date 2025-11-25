@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Model\Comment;
 use App\Model\ValueObject\CommentId;
 use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use App\Service\DatabaseService;
 use App\ValueObject\Pagination;
 
@@ -23,11 +24,9 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
                 FROM comments
                 WHERE post_id = :post_id
                 ORDER BY created_at ASC
-                LIMIT :limit OFFSET :offset";
+                LIMIT {$pagination->limit()} OFFSET {$pagination->offset()}";
         $rows = $this->db->fetchAll($sql, [
             'post_id' => $postId->value(),
-            'limit'   => $pagination->limit(),
-            'offset'  => $pagination->offset(),
         ]);
 
         return array_map([$this, 'mapRowToComment'], $rows);
@@ -50,8 +49,8 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
         VALUES (:post_id, :user_id, :content, :created_at)";
 
         $this->db->query($sql, [
-            'post_id' => $comment->getPostId(),
-            'user_id' => $comment->getUserId(),
+            'post_id' => $comment->getPostId()->value(),
+            'user_id' => $comment->getUserId()?->value(),
             'content' => $comment->getContent(),
             'created_at' => $comment->getCreatedAt(),
         ]);
@@ -68,10 +67,11 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
 
     private function mapRowToComment(array $row): Comment
     {
-        $userId = !empty($row['user_id']) ? (int)$row['user_id'] : null;
+        $id = !empty($row['id']) ? new CommentId((int)$row['id']) : null;
+        $userId = !empty($row['user_id']) ? new UserId((int)$row['user_id']) : null;
 
         return new Comment(
-            id: new CommentId((int)$row['id']),
+            id: $id,
             postId: new PostId((int)$row['post_id']),
             userId: $userId,
             content: $row['content'],
