@@ -10,7 +10,8 @@ final class PostFullData
     public function __construct(
         private readonly Post $post,
         private readonly array $tags,
-        private readonly array $categories
+        private readonly array $categories,
+        private readonly array $comments,
     ) {}
 
     public function getPost(): Post
@@ -26,5 +27,10 @@ final class PostFullData
     public function getCategories(): array
     {
         return $this->categories;
+    }
+
+    public function getComments(): array
+    {
+        return $this->comments;
     }
 }
