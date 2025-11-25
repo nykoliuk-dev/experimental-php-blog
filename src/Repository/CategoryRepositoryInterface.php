@@ -4,18 +4,20 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Category;
+use App\Model\ValueObject\CategoryId;
+use App\Model\ValueObject\PostId;
 
 interface CategoryRepositoryInterface
 {
     /** @return Category[] */
     public function getCategories(): array;
 
-    public function getCategory(int $id): ?Category;
+    public function getCategory(CategoryId $id): ?Category;
 
     /** @return Category[] */
-    public function getCategoriesByPost(int $postId): array;
+    public function getCategoriesByPost(PostId $postId): array;
 
-    public function addCategory(Category $category): int;
+    public function addCategory(Category $category): CategoryId;
 
-    public function removeCategory(int $id): bool;
+    public function removeCategory(CategoryId $id): bool;
 }

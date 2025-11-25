@@ -4,18 +4,20 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Tag;
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\TagId;
 
 interface TagRepositoryInterface
 {
     /** @return Tag[] */
     public function getTags(): array;
 
-    public function getTag(int $id): ?Tag;
+    public function getTag(TagId $id): ?Tag;
 
     /** @return Tag[] */
-    public function getTagsByPost(int $postId): array;
+    public function getTagsByPost(PostId $postId): array;
 
-    public function addTag(Tag $tag): int;
+    public function addTag(Tag $tag): TagId;
 
-    public function removeTag(int $id): bool;
+    public function removeTag(TagId $id): bool;
 }
