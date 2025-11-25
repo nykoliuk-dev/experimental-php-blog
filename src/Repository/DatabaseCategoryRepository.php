@@ -66,11 +66,10 @@ class DatabaseCategoryRepository implements CategoryRepositoryInterface
 
     private function mapRowToCategory(array $row): Category
     {
-        $id = !empty($row['id']) ? new CategoryId((int)$row['id']) : null;
         $parentId = !empty($row['parent_id']) ? new CategoryId((int)$row['parent_id']) : null;
 
         return new Category(
-            id: $id,
+            id: new CategoryId((int)$row['id']),
             parentId: $parentId,
             name: $row['name'],
             slug: $row['slug'],

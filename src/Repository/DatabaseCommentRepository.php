@@ -67,11 +67,10 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
 
     private function mapRowToComment(array $row): Comment
     {
-        $id = !empty($row['id']) ? new CommentId((int)$row['id']) : null;
         $userId = !empty($row['user_id']) ? new UserId((int)$row['user_id']) : null;
 
         return new Comment(
-            id: $id,
+            id: new CommentId((int)$row['id']),
             postId: new PostId((int)$row['post_id']),
             userId: $userId,
             content: $row['content'],
