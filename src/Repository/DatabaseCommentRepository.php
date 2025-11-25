@@ -4,29 +4,39 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Comment;
+use App\Model\ValueObject\CommentId;
+use App\Model\ValueObject\PostId;
 use App\Service\DatabaseService;
+use App\ValueObject\Pagination;
 
 class DatabaseCommentRepository implements CommentRepositoryInterface
 {
     public function __construct(private DatabaseService $db) {}
 
-    /** @return Comment[] */
-    public function getCommentsByPost(int $postId, int $limit = 20, int $offset = 0): array
+    /**
+     *
+     * @return Comment[]
+     */
+    public function getCommentsByPost(PostId $postId, Pagination $pagination): array
     {
         $sql = "SELECT * 
                 FROM comments
                 WHERE post_id = :post_id
                 ORDER BY created_at ASC
-                LIMIT $limit OFFSET $offset";
-        $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
+                LIMIT :limit OFFSET :offset";
+        $rows = $this->db->fetchAll($sql, [
+            'post_id' => $postId->value(),
+            'limit'   => $pagination->limit(),
+            'offset'  => $pagination->offset(),
+        ]);
 
         return array_map([$this, 'mapRowToComment'], $rows);
     }
 
-    public function getComment(int $id): ?Comment
+    public function getComment(CommentId $id): ?Comment
     {
         $sql = "SELECT * FROM `comments` WHERE id=:id";
-        $data = $this->db->fetchOne($sql, ['id' => $id]);
+        $data = $this->db->fetchOne($sql, ['id' => $id->value()]);
         if (!$data) {
             return null;
         }
@@ -34,7 +44,7 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
         return $this->mapRowToComment($data);
     }
 
-    public function addComment(Comment $comment): int
+    public function addComment(Comment $comment): CommentId
     {
         $sql = "INSERT INTO `comments` (post_id, user_id, content, created_at) 
         VALUES (:post_id, :user_id, :content, :created_at)";
@@ -46,13 +56,13 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
             'created_at' => $comment->getCreatedAt(),
         ]);
 
-        return $this->db->lastInsertId();
+        return new CommentId($this->db->lastInsertId());
     }
 
-    public function removeComment(int $id): bool
+    public function removeComment(CommentId $id): bool
     {
         $sql = "DELETE FROM `comments` WHERE `id` = :id";
-        $stmt = $this->db->query($sql, ['id' => $id]);
+        $stmt = $this->db->query($sql, ['id' => $id->value()]);
         return $stmt->rowCount() > 0;
     }
 
