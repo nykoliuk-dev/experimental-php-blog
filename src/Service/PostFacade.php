@@ -6,8 +6,10 @@ namespace App\Service;
 use App\DTO\PostFullData;
 use App\Model\ValueObject\PostId;
 use App\Repository\CategoryRepositoryInterface;
+use App\Repository\CommentRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
 use App\Repository\TagRepositoryInterface;
+use App\ValueObject\Pagination;
 
 class PostFacade
 {
@@ -15,9 +17,10 @@ class PostFacade
         private PostRepositoryInterface $postRepo,
         private CategoryRepositoryInterface $categoryRepo,
         private TagRepositoryInterface $tagRepo,
+        private CommentRepositoryInterface $commentRepo,
     ) {}
 
-    public function getPostWithRelations(PostId $postId): ?PostFullData
+    public function getPostWithRelations(PostId $postId, Pagination $pagination): ?PostFullData
     {
         $post = $this->postRepo->getPost($postId);
 
@@ -27,7 +30,8 @@ class PostFacade
 
         $postTags = $this->tagRepo->getTagsByPost($postId);
         $postCategories = $this->categoryRepo->getCategoriesByPost($postId);
+        $postComments = $this->commentRepo->getCommentsByPost($postId, $pagination);
 
-        return new PostFullData($post, $postTags, $postCategories);
+        return new PostFullData($post, $postTags, $postCategories, $postComments);
     }
 }
