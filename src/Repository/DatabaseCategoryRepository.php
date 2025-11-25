@@ -49,7 +49,7 @@ class DatabaseCategoryRepository implements CategoryRepositoryInterface
         VALUES (:parent_id, :name, :slug)";
 
         $this->db->query($sql, [
-            'parent_id' => $category->getParentId(),
+            'parent_id' => $category->getParentId()?->value(),
             'name' => $category->getName(),
             'slug' => $category->getSlug(),
         ]);
@@ -66,10 +66,11 @@ class DatabaseCategoryRepository implements CategoryRepositoryInterface
 
     private function mapRowToCategory(array $row): Category
     {
-        $parentId = !empty($row['parent_id']) ? (int)$row['parent_id'] : null;
+        $id = !empty($row['id']) ? new CategoryId((int)$row['id']) : null;
+        $parentId = !empty($row['parent_id']) ? new CategoryId((int)$row['parent_id']) : null;
 
         return new Category(
-            id: new CategoryId((int)$row['id']),
+            id: $id,
             parentId: $parentId,
             name: $row['name'],
             slug: $row['slug'],
