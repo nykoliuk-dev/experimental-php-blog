@@ -42,26 +42,4 @@ class DatabaseService
     {
         return (int) $this->pdo->lastInsertId();
     }
-
-    public function beginTransaction(): void
-    {
-        $this->pdo->beginTransaction();
-    }
-
-    public function commit(): void
-    {
-        $this->pdo->commit();
-    }
-
-    public function rollBack(): void
-    {
-        if ($this->pdo->inTransaction()) {
-            $this->pdo->rollBack();
-        }
-    }
-
-    public function inTransaction(): bool
-    {
-        return $this->pdo->inTransaction();
-    }
 }
