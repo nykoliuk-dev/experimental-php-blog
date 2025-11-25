@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Model\Category;
 use App\Model\Comment;
 use App\Service\DatabaseService;
 
@@ -12,9 +11,13 @@ class DatabaseCommentRepository implements CommentRepositoryInterface
     public function __construct(private DatabaseService $db) {}
 
     /** @return Comment[] */
-    public function getCommentsByPost(int $postId): array
+    public function getCommentsByPost(int $postId, int $limit = 20, int $offset = 0): array
     {
-        $sql = "SELECT * FROM `comments` WHERE post_id=:post_id ORDER BY created_at DESC";
+        $sql = "SELECT * 
+                FROM comments
+                WHERE post_id = :post_id
+                ORDER BY created_at ASC
+                LIMIT $limit OFFSET $offset";
         $rows = $this->db->fetchAll($sql, ['post_id' => $postId]);
 
         return array_map([$this, 'mapRowToComment'], $rows);
