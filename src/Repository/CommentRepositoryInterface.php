@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Comment;
+use App\Model\ValueObject\PostId;
 use App\ValueObject\Pagination;
 
 interface CommentRepositoryInterface
 {
     /** @return Comment[] */
-    public function getCommentsByPost(int $postId, Pagination $pagination): array;
+    public function getCommentsByPost(PostId $postId, Pagination $pagination): array;
 
     public function getComment(int $id): ?Comment;
 
