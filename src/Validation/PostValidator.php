@@ -15,6 +15,14 @@ class PostValidator
             'title'   => 'required|min:3',
             'content' => 'required',
             'file' => 'uploaded_file:0,5M,png,jpeg,jpg,gif,webp,avif,heic',
+
+            // === Categories ===
+            'categories'      => 'array',
+            'categories.*'    => 'integer|min:1',
+
+            // === Tags ===
+            'tags'            => 'array',
+            'tags.*'          => 'integer|min:1',
         ]);
         $validation->validate();
 
