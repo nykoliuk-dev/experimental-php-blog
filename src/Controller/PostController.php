@@ -6,7 +6,9 @@ namespace App\Controller;
 use App\Core\Controller;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\UserId;
+use App\Repository\CategoryRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
+use App\Repository\TagRepositoryInterface;
 use App\Service\FileUploaderInterface;
 use App\Service\PostFacade;
 use App\Service\PostService;
@@ -49,10 +51,15 @@ class PostController extends Controller
             'comments' => $postFullData->getComments(),
         ]);
     }
-    public function create(): void
+    public function create(
+        CategoryRepositoryInterface $categoryRepo,
+        TagRepositoryInterface $tagRepo,
+    ): void
     {
         $this->render('posts/create', [
             'title' => 'Добавить статью',
+            'categories' => $categoryRepo->getCategories(),
+            'tags' => $tagRepo->getTags(),
         ]);
     }
 
@@ -72,7 +79,14 @@ class PostController extends Controller
 
         $userId = !empty($_SESSION['user']) ? new UserId($_SESSION['user']['id']) : null;
 
-        $id = $postService->createPost($userId, $_POST['title'], $_POST['content'], $imageName);
+        $id = $postService->createPost(
+            userId: $userId,
+            title: $_POST['title'],
+            content: $_POST['content'],
+            imageName: $imageName,
+            categories: $_POST['categories'],
+            tags: $_POST['tags'],
+        );
 
         echo json_encode(['success' => true, 'message' => "Пост {$id->value()} успешно добавлен!"]);
         exit;
