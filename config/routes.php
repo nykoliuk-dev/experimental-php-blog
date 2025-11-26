@@ -31,7 +31,5 @@ return function (RouteCollector $r): void {
     $r->addRoute('POST', '/logout', [LogoutController::class, 'logout']);
 
     // Comments
-    $r->addRoute('GET', '/posts/{postId:\d+}/comments', [CommentController::class, 'index']);
     $r->addRoute('POST', '/posts/{postId:\d+}/comments', [CommentController::class, 'store']);
-    $r->addRoute('DELETE', '/comments/{id:\d+}', [CommentController::class, 'destroy']);
 };
