@@ -4,31 +4,65 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\Post;
+use App\Model\ValueObject\CategoryId;
 use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\TagId;
 use App\Model\ValueObject\UserId;
 use App\Repository\PostRepositoryInterface;
 
 class PostService
 {
-    public function __construct(private PostRepositoryInterface $repo)
+    public function __construct(
+        private PostRepositoryInterface $repo,
+        private PostCategoryService $categoryService,
+        private PostTagService $tagService,
+        private TransactionManager $tx,
+    )
     {
     }
 
-    public function createPost(?UserId $userId, string $title, string $content, string $imageName): PostId
+    public function createPost(
+        ?UserId $userId,
+        string $title,
+        string $content,
+        string $imageName,
+        array $categories = [],
+        array $tags = []
+    ): PostId
     {
-        $slug = $this->generateSlug($title);
+        return $this->tx->wrap(function () use ($userId, $title, $content, $imageName, $categories, $tags) {
+            $slug = $this->generateSlug($title);
 
-        $post = new Post(
-            id: null,
-            userId: $userId,
-            date: date('Y-m-d H:i:s'),
-            title: $title,
-            slug: $slug,
-            content: $content,
-            imageName: $imageName,
-        );
+            $post = new Post(
+                id: null,
+                userId: $userId,
+                date: date('Y-m-d H:i:s'),
+                title: $title,
+                slug: $slug,
+                content: $content,
+                imageName: $imageName,
+            );
 
-        return $this->repo->addPost($post);
+            $postId = $this->repo->addPost($post);
+            $categoryIds = array_map(
+                fn(string|int $id) => new CategoryId((int)$id),
+                $categories
+            );
+            $tagIds = array_map(
+                fn(string|int $id) => new TagId((int)$id),
+                $tags
+            );
+
+            if (!empty($categories)) {
+                $this->categoryService->setPostCategories($postId, $categoryIds);
+            }
+
+            if (!empty($tags)) {
+                $this->tagService->setPostTags($postId, $tagIds);
+            }
+
+            return $postId;
+        });
     }
 
     private function generateSlug(string $title): string
