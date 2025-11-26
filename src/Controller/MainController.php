@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Core\Controller;
-use App\Repository\JsonPostRepository;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
 
 class MainController extends Controller
 {

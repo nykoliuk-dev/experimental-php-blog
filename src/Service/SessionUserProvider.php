@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\ValueObject\UserId;
+use App\Service\Interfaces\CurrentUserProviderInterface;
 
 class SessionUserProvider implements CurrentUserProviderInterface
 {

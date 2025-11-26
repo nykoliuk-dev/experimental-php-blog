@@ -4,10 +4,9 @@ namespace Unit\Service;
 
 use App\DTO\OperationResult;
 use App\Model\Post;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
 use App\Service\PostMigrationService;
 use PHPUnit\Framework\TestCase;
-use function PHPUnit\Framework\callback;
 
 /**
  * @covers \App\Service\PostMigrationService

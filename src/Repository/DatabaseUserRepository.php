@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use App\Model\User;
 use App\Model\ValueObject\UserId;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Service\DatabaseService;
 
 class DatabaseUserRepository implements UserRepositoryInterface

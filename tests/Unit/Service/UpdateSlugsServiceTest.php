@@ -2,11 +2,9 @@
 
 namespace Service;
 
-use App\DTO\OperationResult;
-use App\Repository\PostMaintenanceRepositoryInterface;
+use App\Repository\Interfaces\PostMaintenanceRepositoryInterface;
 use App\Service\UpdateSlugsService;
 use PHPUnit\Framework\TestCase;
-use Tests\Factory\PostFactory;
 
 /**
  * @covers \App\Service\UpdateSlugsService

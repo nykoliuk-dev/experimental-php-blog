@@ -3,7 +3,7 @@
 namespace Unit\Service;
 
 use App\Model\Post;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
 use App\Service\PostService;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;

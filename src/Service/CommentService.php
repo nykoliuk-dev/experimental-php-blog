@@ -7,7 +7,7 @@ use App\Model\Comment;
 use App\Model\ValueObject\CommentId;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\UserId;
-use App\Repository\CommentRepositoryInterface;
+use App\Repository\Interfaces\CommentRepositoryInterface;
 
 class CommentService
 {

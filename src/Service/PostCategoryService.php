@@ -5,7 +5,7 @@ namespace App\Service;
 
 use App\Model\ValueObject\CategoryId;
 use App\Model\ValueObject\PostId;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
 
 class PostCategoryService
 {

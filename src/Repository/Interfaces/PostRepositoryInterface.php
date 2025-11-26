@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\Interfaces;
 
 use App\Model\Post;
 use App\Model\ValueObject\PostId;

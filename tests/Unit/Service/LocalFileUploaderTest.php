@@ -2,7 +2,7 @@
 
 namespace Unit\Service;
 
-use App\Service\FileMoverInterface;
+use App\Service\Interfaces\FileMoverInterface;
 use App\Service\LocalFileUploader;
 use PHPUnit\Framework\TestCase;
 

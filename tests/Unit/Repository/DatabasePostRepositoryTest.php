@@ -100,6 +100,22 @@ class DatabasePostRepositoryTest extends TestCase
         $this->assertPostsEqual($post, $actualPost);
     }
 
+    public function testGetPostTags(): void
+    {
+        $this->pdo->exec("
+            CREATE TABLE post_tag (
+                `post_id` INTEGER UNSIGNED NOT NULL,
+                `tag_id` INTEGER UNSIGNED NOT NULL
+            )
+        ");
+
+        $this->repo->setPostTags(12, [3, 5]);
+
+        $res = $this->repo->getPostTags(12);
+
+        var_dump($res);
+    }
+
     private function assertPostsEqual(Post $expected, Post $actual): void
     {
         $this->assertSame($expected->getUserId(), $actual->getUserId());

@@ -5,7 +5,7 @@ namespace App\Service;
 
 use App\DTO\OperationResult;
 use App\Model\Post;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
 
 class PostMigrationService
 {

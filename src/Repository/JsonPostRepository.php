@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Post;
+use App\Repository\Interfaces\PostRepositoryInterface;
 
 class JsonPostRepository implements PostRepositoryInterface
 {

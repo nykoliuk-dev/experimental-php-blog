@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-use App\Repository\CategoryRepositoryInterface;
-use App\Repository\CommentRepositoryInterface;
 use App\Repository\DatabaseCategoryRepository;
 use App\Repository\DatabaseCommentRepository;
 use App\Repository\DatabasePostRepository;
 use App\Repository\DatabaseTagRepository;
 use App\Repository\DatabaseUserRepository;
+use App\Repository\Interfaces\CategoryRepositoryInterface;
+use App\Repository\Interfaces\CommentRepositoryInterface;
+use App\Repository\Interfaces\PostRepositoryInterface;
+use App\Repository\Interfaces\TagRepositoryInterface;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Repository\JsonPostRepository;
-use App\Repository\PostRepositoryInterface;
-use App\Repository\TagRepositoryInterface;
-use App\Repository\UserRepositoryInterface;
-use App\Service\CurrentUserProviderInterface;
 use App\Service\FileMover;
-use App\Service\FileMoverInterface;
-use App\Service\FileUploaderInterface;
+use App\Service\Interfaces\CurrentUserProviderInterface;
+use App\Service\Interfaces\FileMoverInterface;
+use App\Service\Interfaces\FileUploaderInterface;
 use App\Service\LocalFileUploader;
 use App\Service\SessionUserProvider;
 use DI\ContainerBuilder;
