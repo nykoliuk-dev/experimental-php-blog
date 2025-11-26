@@ -12,10 +12,12 @@ use App\Repository\JsonPostRepository;
 use App\Repository\PostRepositoryInterface;
 use App\Repository\TagRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
+use App\Service\CurrentUserProviderInterface;
 use App\Service\FileMover;
 use App\Service\FileMoverInterface;
 use App\Service\FileUploaderInterface;
 use App\Service\LocalFileUploader;
+use App\Service\SessionUserProvider;
 use DI\ContainerBuilder;
 use Rakit\Validation\Validator;
 use Twig\Environment;
@@ -43,6 +45,7 @@ $builder->addDefinitions([
     },
     'config' => $config,
     Environment::class => $twig,
+    CurrentUserProviderInterface::class => DI\get(SessionUserProvider::class),
     JsonPostRepository::class => DI\create()
         ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
