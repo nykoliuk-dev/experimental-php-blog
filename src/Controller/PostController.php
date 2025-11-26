@@ -79,16 +79,21 @@ class PostController extends Controller
 
         $userId = !empty($_SESSION['user']) ? new UserId($_SESSION['user']['id']) : null;
 
-        $id = $postService->createPost(
-            userId: $userId,
-            title: $_POST['title'],
-            content: $_POST['content'],
-            imageName: $imageName,
-            categories: $_POST['categories'],
-            tags: $_POST['tags'],
-        );
+        try {
+            $id = $postService->createPost(
+                userId: $userId,
+                title: $_POST['title'],
+                content: $_POST['content'],
+                imageName: $imageName,
+                categories: $_POST['categories'],
+                tags: $_POST['tags'],
+            );
 
-        echo json_encode(['success' => true, 'message' => "Пост {$id->value()} успешно добавлен!"]);
+            echo json_encode(['success' => true, 'message' => "Пост {$id->value()} успешно добавлен!"]);
+        } catch (\Throwable $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'errors' => ['system' => 'Ошибка при сохранении комментария.']]);
+        }
         exit;
     }
 }
