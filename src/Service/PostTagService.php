@@ -11,7 +11,6 @@ class PostTagService
 {
     public function __construct(
         private PostRepositoryInterface $posts,
-        private TransactionManager $tx
     ) {}
 
     /**
@@ -19,9 +18,7 @@ class PostTagService
      */
     public function setPostTags(PostId $postId, array $tags): void
     {
-        $this->tx->wrap(function () use ($postId, $tags) {
-            $this->posts->clearPostTags($postId);
-            $this->posts->addPostTags($postId, $tags);
-        });
+        $this->posts->clearPostTags($postId);
+        $this->posts->addPostTags($postId, $tags);
     }
 }
