@@ -41,7 +41,7 @@ class DatabasePostRepository implements PostRepositoryInterface
         VALUES (:user_id, :date, :title, :slug, :content, :image_name)";
 
         $this->db->query($sql, [
-            'user_id' => $post->getUserId()->value(),
+            'user_id' => $post->getUserId()?->value(),
             'date' => $post->getDate(),
             'title' => $post->getTitle(),
             'slug' => $post->getSlug(),
