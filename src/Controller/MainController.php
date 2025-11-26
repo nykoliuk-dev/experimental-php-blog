@@ -5,12 +5,13 @@ namespace App\Controller;
 
 use App\Core\Controller;
 use App\Repository\JsonPostRepository;
+use App\Repository\PostRepositoryInterface;
 
 class MainController extends Controller
 {
-    public function index(): void
+    public function index(PostRepositoryInterface $repo): void
     {
-        $posts = $this->repo->getPosts();
+        $posts = $repo->getPosts();
 
         $this->render('main/index', [
             'title' => 'Список постов',
