@@ -105,7 +105,7 @@ class DatabasePostRepository implements PostRepositoryInterface
         $params = [];
 
         foreach ($categoryIds as $i => $categoryId) {
-            $values[] = "(:post_id_$i, :category_id_$i)";
+            $values[] = "(:category_id_$i, :post_id_$i)";
             $params["category_id_$i"]  = $categoryId->value();
             $params["post_id_$i"] = $postId->value();
         }
