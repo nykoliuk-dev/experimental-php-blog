@@ -54,7 +54,7 @@ $builder->addDefinitions([
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
     FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
-        ->constructor($config->gallery),
+        ->constructor($config->gallery, DI\get(FileMoverInterface::class)),
 ]);
 $container = $builder->build();
 
