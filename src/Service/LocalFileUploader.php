@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Service\Interfaces\FileMoverInterface;
-use App\Service\Interfaces\FileUploaderInterface;
+use App\Service\Interface\FileMoverInterface;
+use App\Service\Interface\FileUploaderInterface;
 
 final class LocalFileUploader implements FileUploaderInterface
 {

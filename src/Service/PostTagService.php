@@ -5,7 +5,7 @@ namespace App\Service;
 
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\TagId;
-use App\Repository\Interfaces\PostRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
 
 class PostTagService
 {

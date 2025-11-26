@@ -6,7 +6,7 @@ namespace App\Repository;
 use App\Model\Tag;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\TagId;
-use App\Repository\Interfaces\TagRepositoryInterface;
+use App\Repository\Interface\TagRepositoryInterface;
 use App\Service\DatabaseService;
 
 class DatabaseTagRepository implements TagRepositoryInterface

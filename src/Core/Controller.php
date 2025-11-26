@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Service\Interfaces\CurrentUserProviderInterface;
+use App\Service\Interface\CurrentUserProviderInterface;
 use Twig\Environment;
 
 abstract class Controller

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Core\Controller;
-use App\Repository\Interfaces\PostRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
 
 class MainController extends Controller
 {

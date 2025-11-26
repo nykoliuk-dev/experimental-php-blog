@@ -8,7 +8,7 @@ use App\Model\ValueObject\CategoryId;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\TagId;
 use App\Model\ValueObject\UserId;
-use App\Repository\Interfaces\PostRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
 use App\Service\DatabaseService;
 
 class DatabasePostRepository implements PostRepositoryInterface

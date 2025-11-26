@@ -5,10 +5,10 @@ namespace App\Service;
 
 use App\DTO\PostFullData;
 use App\Model\ValueObject\PostId;
-use App\Repository\Interfaces\CategoryRepositoryInterface;
-use App\Repository\Interfaces\CommentRepositoryInterface;
-use App\Repository\Interfaces\PostRepositoryInterface;
-use App\Repository\Interfaces\TagRepositoryInterface;
+use App\Repository\Interface\CategoryRepositoryInterface;
+use App\Repository\Interface\CommentRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
+use App\Repository\Interface\TagRepositoryInterface;
 use App\ValueObject\Pagination;
 
 class PostFacade

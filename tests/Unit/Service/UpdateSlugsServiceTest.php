@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use App\Repository\Interfaces\PostMaintenanceRepositoryInterface;
+use App\Repository\Interface\PostMaintenanceRepositoryInterface;
 use App\Service\UpdateSlugsService;
 use PHPUnit\Framework\TestCase;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\OperationResult;
-use App\Repository\Interfaces\PostMaintenanceRepositoryInterface;
+use App\Repository\Interface\PostMaintenanceRepositoryInterface;
 use Throwable;
 
 class UpdateSlugsService

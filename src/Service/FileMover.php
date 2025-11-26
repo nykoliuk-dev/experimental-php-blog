@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Service\Interfaces\FileMoverInterface;
+use App\Service\Interface\FileMoverInterface;
 
 final class FileMover implements FileMoverInterface
 {

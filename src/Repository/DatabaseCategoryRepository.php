@@ -6,7 +6,7 @@ namespace App\Repository;
 use App\Model\Category;
 use App\Model\ValueObject\CategoryId;
 use App\Model\ValueObject\PostId;
-use App\Repository\Interfaces\CategoryRepositoryInterface;
+use App\Repository\Interface\CategoryRepositoryInterface;
 use App\Service\DatabaseService;
 
 class DatabaseCategoryRepository implements CategoryRepositoryInterface

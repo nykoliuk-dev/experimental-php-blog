@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\User;
-use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Repository\UserRepositoryInterface;
 
 class AuthService
 {

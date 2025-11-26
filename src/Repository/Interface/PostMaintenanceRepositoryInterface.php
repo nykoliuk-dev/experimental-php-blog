@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Repository\Interfaces;
+namespace App\Repository\Interface;
 
 interface PostMaintenanceRepositoryInterface
 {
