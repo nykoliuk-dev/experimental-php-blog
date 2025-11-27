@@ -6,12 +6,15 @@ namespace Model\ValueObject;
 use App\Model\ValueObject\CategoryId;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Model\ValueObject\CategoryId
+ */
 class CategoryIdTest extends TestCase
 {
     public function testCreatesCategoryIdWithValidDataAndReturnCorrectValue(): void
     {
         $id = 1;
-        $categoryId = new CategoryId(1);
+        $categoryId = new CategoryId($id);
         $this->assertSame($id, $categoryId->value());
     }
 

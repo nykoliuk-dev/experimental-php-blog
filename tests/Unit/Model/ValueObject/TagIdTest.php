@@ -6,12 +6,15 @@ namespace Model\ValueObject;
 use App\Model\ValueObject\TagId;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Model\ValueObject\TagId
+ */
 class TagIdTest extends TestCase
 {
     public function testCreatesTagIdWithValidDataAndReturnCorrectValue(): void
     {
         $id = 1;
-        $tagId = new TagId(1);
+        $tagId = new TagId($id);
         $this->assertSame($id, $tagId->value());
     }
 

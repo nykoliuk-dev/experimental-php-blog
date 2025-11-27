@@ -6,12 +6,15 @@ namespace Model\ValueObject;
 use App\Model\ValueObject\UserId;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Model\ValueObject\UserId
+ */
 class UserIdTest extends TestCase
 {
     public function testCreatesUserIdWithValidDataAndReturnCorrectValue(): void
     {
         $id = 1;
-        $userId = new UserId(1);
+        $userId = new UserId($id);
         $this->assertSame($id, $userId->value());
     }
 

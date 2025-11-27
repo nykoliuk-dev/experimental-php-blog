@@ -6,12 +6,15 @@ namespace Model\ValueObject;
 use App\Model\ValueObject\PostId;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Model\ValueObject\PostId
+ */
 class PostIdTest extends TestCase
 {
     public function testCreatesPostIdWithValidDataAndReturnCorrectValue(): void
     {
         $id = 1;
-        $postId = new PostId(1);
+        $postId = new PostId($id);
         $this->assertSame($id, $postId->value());
     }
 

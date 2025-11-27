@@ -6,12 +6,15 @@ namespace Model\ValueObject;
 use App\Model\ValueObject\CommentId;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Model\ValueObject\CommentId
+ */
 class CommentIdTest extends TestCase
 {
     public function testCreatesCommentIdWithValidDataAndReturnCorrectValue(): void
     {
         $id = 1;
-        $commentId = new CommentId(1);
+        $commentId = new CommentId($id);
         $this->assertSame($id, $commentId->value());
     }
 
