@@ -6,6 +6,9 @@ use App\Service\Interface\FileMoverInterface;
 use App\Service\LocalFileUploader;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Service\LocalFileUploader
+ */
 class LocalFileUploaderTest extends TestCase
 {
     public function testUploadMovesFile(): void
