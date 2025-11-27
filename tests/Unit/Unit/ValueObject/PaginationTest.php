@@ -68,7 +68,7 @@ class PaginationTest extends TestCase
     {
         return [
             'less than 20' => [10],
-            'more than 20' => [110],
+            'more than 100' => [110],
         ];
     }
 
