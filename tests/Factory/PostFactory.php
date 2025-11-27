@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace Tests\Factory;
 
 use App\Model\Post;
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 
 class PostFactory
 {
     public static function create(
-        ?int $id = null,
-        ?int $userId = null,
+        ?PostId $id = null,
+        ?UserId $userId = null,
         string $date = '2025-11-07',
         string $title = 'Title',
         string $slug = 'title',
@@ -28,8 +30,8 @@ class PostFactory
     }
 
     public static function createWithoutSlug(
-        ?int $id = null,
-        ?int $userId = null,
+        ?PostId $id = null,
+        ?UserId $userId = null,
         string $date = '2025-11-07',
         string $title = 'Title',
         string $content = 'Content',

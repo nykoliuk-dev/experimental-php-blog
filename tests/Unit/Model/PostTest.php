@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Unit\Model;
 
 use App\Model\Post;
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Tests\Factory\PostFactory;
@@ -15,18 +18,20 @@ class PostTest extends TestCase
     /**
      * @dataProvider validIdProvider
      */
-    public function testCreatesPostWithValidData(?int $id): void
+    public function testCreatesPostWithValidData(?PostId $id): void
     {
         $post = PostFactory::create($id);
 
         if($id === null){
             $this->assertNull($post->getId());
         }else{
-            $this->assertSame(1, $post->getId());
+            $this->assertSame(1, $post->getId()->value());
         }
 
+        $this->assertNull($post->getUserId());
         $this->assertSame('2025-11-07', $post->getDate());
         $this->assertSame('Title', $post->getTitle());
+        $this->assertSame('title', $post->getSlug());
         $this->assertSame('Content', $post->getContent());
         $this->assertSame('img.jpg', $post->getImgName());
     }
@@ -40,8 +45,8 @@ class PostTest extends TestCase
         $this->expectExceptionMessage($expectedMessage);
 
         new Post(
-            id: 1,
-            userId: 1,
+            id: new PostId(1),
+            userId: new UserId(1),
             date: '2025-11-07',
             title: $title,
             slug: 'title',
@@ -60,8 +65,8 @@ class PostTest extends TestCase
         $this->expectExceptionMessage('Invalid slug format');
 
         new Post(
-            id: 1,
-            userId: 1,
+            id: new PostId(1),
+            userId: new UserId(1),
             date: '2025-11-07',
             title: 'Title',
             slug: $slug,
@@ -77,8 +82,8 @@ class PostTest extends TestCase
         $this->expectExceptionMessage('Content cannot be empty');
 
         new Post(
-            id: 1,
-            userId: 1,
+            id: new PostId(1),
+            userId: new UserId(1),
             date: '2025-11-07',
             title: 'Title',
             slug: 'title',
@@ -96,8 +101,8 @@ class PostTest extends TestCase
         $this->expectExceptionMessage('Invalid image format');
 
         new Post(
-            id: 1,
-            userId: 1,
+            id: new PostId(1),
+            userId: new UserId(1),
             date: '2025-11-07',
             title: 'Title',
             slug: 'title',
@@ -110,7 +115,7 @@ class PostTest extends TestCase
     {
         return [
             'new post (id = null)' => [null],
-            'post exists (id = integer)' => [1],
+            'post exists (id = PostId object)' => [new PostId(1)],
         ];
     }
 
@@ -128,6 +133,7 @@ class PostTest extends TestCase
             'contains space' => ['*tit le'],
             'contains special char' => ['slug@name'],
             'empty slug' => [''],
+            'null slug is invalid' => [null],
             'invalid symbols' => ['slug#1'],
         ];
     }
