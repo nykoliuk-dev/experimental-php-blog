@@ -6,7 +6,6 @@ namespace Unit\Model;
 use App\Model\Post;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\UserId;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Tests\Factory\PostFactory;
 
@@ -41,7 +40,7 @@ class PostTest extends TestCase
      */
     public function testThrowsExceptionWhenInvalidTitle(string $title, string $expectedMessage): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
 
         new Post(
@@ -61,7 +60,7 @@ class PostTest extends TestCase
      */
     public function testThrowsExceptionWhenSlugIsInvalid(string $slug): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid slug format');
 
         new Post(
@@ -78,7 +77,7 @@ class PostTest extends TestCase
 
     public function testThrowsExceptionWhenContentIsEmpty(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Content cannot be empty');
 
         new Post(
@@ -97,7 +96,7 @@ class PostTest extends TestCase
      */
     public function testThrowsExceptionWhenInvalidImageName(string $imgName): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid image format');
 
         new Post(
