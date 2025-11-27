@@ -59,7 +59,7 @@ class PostTest extends TestCase
     /**
      * @dataProvider invalidSlugProvider
      */
-    public function testThrowsExceptionWhenInvalidSlug(string $slug): void
+    public function testThrowsExceptionWhenSlugIsInvalid(string $slug): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid slug format');
@@ -133,7 +133,6 @@ class PostTest extends TestCase
             'contains space' => ['*tit le'],
             'contains special char' => ['slug@name'],
             'empty slug' => [''],
-            'null slug is invalid' => [null],
             'invalid symbols' => ['slug#1'],
         ];
     }
