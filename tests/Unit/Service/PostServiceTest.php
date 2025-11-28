@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace Unit\Service;
 
 use App\Model\Post;
+use App\Model\ValueObject\CategoryId;
 use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\TagId;
 use App\Model\ValueObject\UserId;
 use App\Repository\Interface\PostRepositoryInterface;
-use App\Service\PostCategoryService;
+use App\Service\Interface\PostCategoryServiceInterface;
+use App\Service\Interface\PostTagServiceInterface;
+use App\Service\Interface\TransactionManagerInterface;
 use App\Service\PostService;
-use App\Service\PostTagService;
-use App\Service\TransactionManager;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -52,10 +53,7 @@ class PostServiceTest extends TestCase
             }))
             ->willReturn($expectedId);
 
-        $postCategoryServiceMock = $this->createMock(PostCategoryService::class);
-        $postTagServiceMock = $this->createMock(PostTagService::class);
-
-        $transactionManagerMock = $this->createMock(TransactionManager::class);
+        $transactionManagerMock = $this->createMock(TransactionManagerInterface::class);
         $transactionManagerMock->expects($this->once())
             ->method('wrap')
             ->willReturnCallback(function (callable $callback)
@@ -67,8 +65,8 @@ class PostServiceTest extends TestCase
         //Act
         $service = new PostService(
             $postRepositoryMock,
-            $postCategoryServiceMock,
-            $postTagServiceMock,
+            $this->createMock(PostCategoryServiceInterface::class),
+            $this->createMock(PostTagServiceInterface::class),
             $transactionManagerMock
         );
         $id = $service->createPost($userId, $title, $content, $imageName);
@@ -93,25 +91,30 @@ class PostServiceTest extends TestCase
             ->method('addPost')
             ->willReturn($expectedId);
 
-        $postCategoryServiceMock = $this->createMock(PostCategoryService::class);
+        $postCategoryServiceMock = $this->createMock(PostCategoryServiceInterface::class);
         $postCategoryServiceMock->expects($this->once())
             ->method('setPostCategories')
             ->with(
-                $this->callback(function (PostId $postId) use ($expectedId)
-                {
-                    $this->assertSame($expectedId, $postId);
-                    return true;
-                }),
+                $this->isInstanceOf(PostId::class),
                 $this->callback(function ($categoryIds) use ($categories)
                 {
-                    $this->assertEquals($categories, [$categoryIds[0]->value(), $categoryIds[1]->value()]);
-                    return true;
+                    if (count($categoryIds) !== count($categories)) {
+                        return false;
+                    }
+
+                    foreach ($categoryIds as $categoryId) {
+                        if (! $categoryId instanceof CategoryId) {
+                            return false;
+                        }
+                    }
+
+                    $values = array_map(fn(CategoryId $id) => $id->value(), $categoryIds);
+
+                    return $values === $categories;
                 })
             );
 
-        $postTagServiceMock = $this->createMock(PostTagService::class);
-
-        $transactionManagerMock = $this->createMock(TransactionManager::class);
+        $transactionManagerMock = $this->createMock(TransactionManagerInterface::class);
         $transactionManagerMock->expects($this->once())
             ->method('wrap')
             ->willReturnCallback(function (callable $callback)
@@ -124,7 +127,7 @@ class PostServiceTest extends TestCase
         $service = new PostService(
             $postRepositoryMock,
             $postCategoryServiceMock,
-            $postTagServiceMock,
+            $this->createMock(PostTagServiceInterface::class),
             $transactionManagerMock
         );
         $id = $service->createPost(
@@ -155,16 +158,16 @@ class PostServiceTest extends TestCase
             ->method('addPost')
             ->willReturn($expectedId);
 
-        $postCategoryServiceMock = $this->createMock(PostCategoryService::class);
+        $postCategoryServiceMock = $this->createMock(PostCategoryServiceInterface::class);
 
-        $postTagServiceMock = $this->createMock(PostTagService::class);
+        $postTagServiceMock = $this->createMock(PostTagServiceInterface::class);
         $postTagServiceMock->expects($this->once())
             ->method('setPostTags')
             ->with(
                 $this->isInstanceOf(PostId::class),
-                $this->callback(function ($tagIds)
+                $this->callback(function ($tagIds) use ($tags)
                 {
-                    if (empty($tagIds)) {
+                    if (count($tagIds) !== count($tags)) {
                         return false;
                     }
 
@@ -174,11 +177,13 @@ class PostServiceTest extends TestCase
                         }
                     }
 
-                    return true;
+                    $values = array_map(fn(TagId $id) => $id->value(), $tagIds);
+
+                    return $values === $tags;
                 })
             );
 
-        $transactionManagerMock = $this->createMock(TransactionManager::class);
+        $transactionManagerMock = $this->createMock(TransactionManagerInterface::class);
         $transactionManagerMock->expects($this->once())
             ->method('wrap')
             ->willReturnCallback(function (callable $callback)
@@ -213,13 +218,14 @@ class PostServiceTest extends TestCase
     {
         $service = new PostService(
             $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(PostCategoryService::class),
-            $this->createMock(PostTagService::class),
-            $this->createMock(TransactionManager::class)
+            $this->createMock(PostCategoryServiceInterface::class),
+            $this->createMock(PostTagServiceInterface::class),
+            $this->createMock(TransactionManagerInterface::class)
         );
 
         $reflection = new ReflectionClass($service);
         $method = $reflection->getMethod('generateSlug');
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         $generatedSlug = $method->invoke($service, $title);
