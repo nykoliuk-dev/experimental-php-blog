@@ -16,8 +16,14 @@ use App\Service\FileMover;
 use App\Service\Interface\CurrentUserProviderInterface;
 use App\Service\Interface\FileMoverInterface;
 use App\Service\Interface\FileUploaderInterface;
+use App\Service\Interface\PostCategoryServiceInterface;
+use App\Service\Interface\PostTagServiceInterface;
+use App\Service\Interface\TransactionManagerInterface;
 use App\Service\LocalFileUploader;
+use App\Service\PostCategoryService;
+use App\Service\PostTagService;
 use App\Service\SessionUserProvider;
+use App\Service\TransactionManager;
 use DI\ContainerBuilder;
 use Rakit\Validation\Validator;
 use Twig\Environment;
@@ -54,6 +60,9 @@ $builder->addDefinitions([
     TagRepositoryInterface::class => DI\get(DatabaseTagRepository::class),
     CategoryRepositoryInterface::class => DI\get(DatabaseCategoryRepository::class),
     CommentRepositoryInterface::class => DI\get(DatabaseCommentRepository::class),
+    PostCategoryServiceInterface::class => DI\get(PostCategoryService::class),
+    PostTagServiceInterface::class => DI\get(PostTagService::class),
+    TransactionManagerInterface::class => DI\get(TransactionManager::class),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
     FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
