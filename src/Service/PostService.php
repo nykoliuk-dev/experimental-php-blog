@@ -44,20 +44,21 @@ class PostService
             );
 
             $postId = $this->repo->addPost($post);
-            $categoryIds = array_map(
-                fn(string|int $id) => new CategoryId((int)$id),
-                $categories
-            );
-            $tagIds = array_map(
-                fn(string|int $id) => new TagId((int)$id),
-                $tags
-            );
 
             if (!empty($categories)) {
+                $categoryIds = array_map(
+                    fn(string|int $id) => new CategoryId((int)$id),
+                    $categories
+                );
+
                 $this->categoryService->setPostCategories($postId, $categoryIds);
             }
 
             if (!empty($tags)) {
+                $tagIds = array_map(
+                    fn(string|int $id) => new TagId((int)$id),
+                    $tags
+                );
                 $this->tagService->setPostTags($postId, $tagIds);
             }
 
