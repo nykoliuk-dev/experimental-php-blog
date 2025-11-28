@@ -9,14 +9,17 @@ use App\Model\ValueObject\PostId;
 use App\Model\ValueObject\TagId;
 use App\Model\ValueObject\UserId;
 use App\Repository\Interface\PostRepositoryInterface;
+use App\Service\Interface\PostCategoryServiceInterface;
+use App\Service\Interface\PostTagServiceInterface;
+use App\Service\Interface\TransactionManagerInterface;
 
 class PostService
 {
     public function __construct(
         private PostRepositoryInterface $repo,
-        private PostCategoryService $categoryService,
-        private PostTagService $tagService,
-        private TransactionManager $tx,
+        private PostCategoryServiceInterface $categoryService,
+        private PostTagServiceInterface $tagService,
+        private TransactionManagerInterface $tx,
     )
     {
     }
