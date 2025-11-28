@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class TransactionManager
+use App\Service\Interface\TransactionManagerInterface;
+
+class TransactionManager implements TransactionManagerInterface
 {
     public function __construct(private \PDO $pdo) {}
 
