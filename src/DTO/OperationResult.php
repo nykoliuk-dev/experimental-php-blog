@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace App\DTO;
-final class MigrationResult
+final class OperationResult
 {
     public function __construct(
         private readonly int $migratedCount,
@@ -10,7 +10,7 @@ final class MigrationResult
         private readonly array $validationErrors = []
     ) {}
 
-    public function getMigratedCount(): int
+    public function getSuccessCount(): int
     {
         return $this->migratedCount;
     }

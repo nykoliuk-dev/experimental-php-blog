@@ -1,0 +1,83 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <header class="row tm-welcome-section">
+        <h2 class="col-12 text-center tm-section-title">Create an account</h2>
+        <p class="col-12 text-center">
+            Register to get access to all features of the blog.
+        </p>
+    </header>
+
+    <div class="tm-container-inner-2 tm-contact-section">
+        <div class="row">
+            <div class="col-12">
+                <form id="registerForm" action="/register" method="POST" class="tm-contact-form">
+                    <div id="form-messages"></div>
+
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" placeholder="Your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm password" required>
+                    </div>
+
+                    <div class="form-group tm-d-flex">
+                        <button type="submit" class="tm-btn tm-btn-success tm-btn-right">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            $('#registerForm').on('submit', function (e) {
+                e.preventDefault();
+
+                let form = $(this);
+                let formData = form.serialize();
+                let messages = $('#form-messages');
+
+                $.ajax({
+                    url: '/register',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        messages
+                            .removeClass('tm-text-danger')
+                            .addClass('tm-text-success')
+                            .html(`${response.message}`);
+
+                        form[0].reset();
+                    },
+                    error: function (xhr) {
+                        let res = xhr.responseJSON;
+                        messages.removeClass('tm-text-success').addClass('tm-text-danger');
+
+                        if (res && res.errors) {
+                            let html = '<ul>';
+                            for (const [field, errors] of Object.entries(res.errors)) {
+                                html += `<li>${errors.join('<br>')}</li>`;
+                            }
+                            html += '</ul>';
+                            messages.html(html);
+                        } else {
+                            messages.html('<p>Произошла ошибка при отправке формы.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

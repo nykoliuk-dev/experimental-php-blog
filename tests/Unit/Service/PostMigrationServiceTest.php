@@ -1,14 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Unit\Service;
 
-use App\DTO\MigrationResult;
+use App\DTO\OperationResult;
 use App\Model\Post;
-use App\Repository\PostRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
 use App\Service\PostMigrationService;
 use PHPUnit\Framework\TestCase;
-use function PHPUnit\Framework\callback;
 
+/**
+ * @covers \App\Service\PostMigrationService
+ */
 class PostMigrationServiceTest extends TestCase
 {
     protected PostRepositoryInterface $sourceRepo;
@@ -25,7 +28,7 @@ class PostMigrationServiceTest extends TestCase
             ->method('getPosts')
             ->willReturn([
                 $this->makePost(id: 1),
-                $this->makePost(id: 2, title: 'Title2', content: 'Content2'),
+                $this->makePost(id: 2, title: 'Title2', slug: 'test-slug2', content: 'Content2'),
             ]);
         $this->targetRepo->expects($this->exactly(2))
             ->method('addPost')
@@ -36,7 +39,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(2, $result->getMigratedCount());
+        $this->assertSame(2, $result->getSuccessCount());
         $this->assertSame([], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -58,7 +61,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame(["Post №1 is not valid"], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -74,11 +77,11 @@ class PostMigrationServiceTest extends TestCase
             ->with($this->isInstanceOf(Post::class))
             ->willReturnCallback(fn(Post $p) => $p->getId());
         $this->targetRepo->method('getPost')
-            ->willReturn(new Post(1, '2025-11-07', 'Title', 'Content', 'img.jpg'));
+            ->willReturn($this->makePost(id: 1));
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame(["Post №1 already exists"], $result->getValidationErrors());
         $this->assertSame([], $result->getCriticalErrors());
     }
@@ -96,7 +99,7 @@ class PostMigrationServiceTest extends TestCase
 
         $result = $this->migrate();
 
-        $this->assertSame(0, $result->getMigratedCount());
+        $this->assertSame(0, $result->getSuccessCount());
         $this->assertSame([], $result->getValidationErrors());
         $this->assertSame(['Failed to migrate post №1: DB error'], $result->getCriticalErrors());
     }
@@ -104,9 +107,18 @@ class PostMigrationServiceTest extends TestCase
     private function makePost(
         int $id,
         string $title = 'Title',
+        string $slug = 'test-slug',
         string $content = 'Content'
     ): Post {
-        return new Post($id, '2025-11-07', $title, $content, 'img.jpg');
+        return new Post(
+            id: $id,
+            userId: null,
+            date: '2025-11-07',
+            title: $title,
+            slug: $slug,
+            content: $content,
+            imageName: 'img.jpg'
+        );
     }
 
     private function makeInvalidPost(int $id): Post
@@ -118,7 +130,7 @@ class PostMigrationServiceTest extends TestCase
         return $post;
     }
 
-    private function migrate(): MigrationResult
+    private function migrate(): OperationResult
     {
         $service = new PostMigrationService($this->sourceRepo, $this->targetRepo);
         return $service->migrate();

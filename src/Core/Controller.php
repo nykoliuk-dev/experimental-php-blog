@@ -3,18 +3,23 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Repository\PostRepositoryInterface;
+use App\Service\Interface\CurrentUserProviderInterface;
 use Twig\Environment;
 
 abstract class Controller
 {
     public function __construct(
-        protected PostRepositoryInterface $repo,
-        protected Environment             $twig
+        protected Environment $twig,
+        protected CurrentUserProviderInterface $currentUserProvider
     ) {}
 
     protected function render(string $template, array $data): void
     {
-        echo $this->twig->render($template . '.twig', $data);
+        $currentUserId = $this->currentUserProvider->getCurrentUserId()?->value();
+
+        $globalData = [
+            'current_user_id' => $currentUserId,
+        ];
+        echo $this->twig->render($template . '.twig', array_merge($globalData, $data));
     }
 }
