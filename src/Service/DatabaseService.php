@@ -27,17 +27,11 @@ class DatabaseService
         }
     }
 
-    /**
-     * @return Post[]
-     */
     public function fetchAll(string $sql, array $params = []): array
     {
         return $this->query($sql, $params)->fetchAll();
     }
 
-    /**
-     * @return Post[]
-     */
     public function fetchOne(string $sql, array $params = []): ?array
     {
         $row = $this->query($sql, $params)->fetch();

@@ -63,7 +63,7 @@ class MigrateCommand extends Command
             return Command::FAILURE;
         }
 
-        $io->success("{$migrationResult->getMigratedCount()} post(s) successfully added");
+        $io->success("{$migrationResult->getSuccessCount()} post(s) successfully added");
 
         return Command::SUCCESS;
     }

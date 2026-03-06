@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unit\Command;
 
 use App\Command\MigrateCommand;
-use App\DTO\MigrationResult;
+use App\DTO\OperationResult;
 use App\Service\PostMigrationService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
@@ -19,7 +20,7 @@ class MigrateCommandTest extends TestCase
         $service = $this->createMock(PostMigrationService::class);
         $service->expects($this->once())
             ->method('migrate')
-            ->willReturn(new MigrationResult(2, [], []));
+            ->willReturn(new OperationResult(2, [], []));
 
         $application = new Application();
         $application->add(new MigrateCommand($service));
@@ -37,7 +38,7 @@ class MigrateCommandTest extends TestCase
         $service = $this->createMock(PostMigrationService::class);
         $service->expects($this->once())
             ->method('migrate')
-            ->willReturn(new MigrationResult(2, ["Failed to migrate post №1"], []));
+            ->willReturn(new OperationResult(2, ["Failed to migrate post №1"], []));
 
         $application = new Application();
         $application->add(new MigrateCommand($service));

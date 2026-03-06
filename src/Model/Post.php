@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\ValueObject\PostId;
+use App\Model\ValueObject\UserId;
 use InvalidArgumentException;
 
 class Post
@@ -10,9 +12,11 @@ class Post
     private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'heic'];
 
     public function __construct(
-        private ?int $id,
+        private ?PostId $id,
+        private ?UserId $userId,
         private string $date,
         private string $title,
+        private string $slug,
         private string $content,
         private string $imageName,
     )
@@ -34,6 +38,10 @@ class Post
             throw new InvalidArgumentException('Content cannot be empty');
         }
 
+        if (!preg_match('/^[a-z0-9-]+$/', $this->slug)) {
+            throw new InvalidArgumentException('Invalid slug format');
+        }
+
         $escaped = implode('|', array_map('preg_quote', self::SUPPORTED_IMAGE_FORMATS));
 
         if (!preg_match('/\.(' . $escaped . ')$/i', $this->imageName)) {
@@ -41,18 +49,31 @@ class Post
         }
     }
 
-    public function getId(): ?int
+    public function getId(): ?PostId
     {
         return $this->id;
     }
+
+    public function getUserId(): ?UserId
+    {
+        return $this->userId;
+    }
+
     public function getDate(): string
     {
         return $this->date;
     }
+
     public function getTitle(): string
     {
         return $this->title;
     }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
     public function getContent(): string
     {
         return $this->content;

@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Unit\Service;
 
-use App\Service\FileMoverInterface;
+use App\Service\Interface\FileMoverInterface;
 use App\Service\LocalFileUploader;
 use PHPUnit\Framework\TestCase;
 

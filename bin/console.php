@@ -2,9 +2,12 @@
 declare(strict_types=1);
 
 use App\Command\MigrateCommand;
+use App\Command\UpdateSlugsCommand;
 use App\Repository\DatabasePostRepository;
 use App\Repository\JsonPostRepository;
+use App\Repository\PostMaintenanceRepository;
 use App\Service\DatabaseService;
+use App\Service\UpdateSlugsService;
 use Symfony\Component\Console\Application;
 
 $bootstrap = require_once dirname(__DIR__) . '/bootstrap/init.php';
@@ -29,6 +32,10 @@ $migrationService = new \App\Service\PostMigrationService(
     to: $dbRepo
 );
 
+$maintenanceRepo = new PostMaintenanceRepository($dbServ);
+$updateSlugsService = new UpdateSlugsService($maintenanceRepo);
+
 $app = new Application('Basic Blog CLI', '1.0.0');
 $app->add(new MigrateCommand($migrationService));
+$app->add(new UpdateSlugsCommand($updateSlugsService));
 $app->run();

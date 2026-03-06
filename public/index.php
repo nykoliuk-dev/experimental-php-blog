@@ -1,13 +1,29 @@
 <?php
 declare(strict_types=1);
 
+use App\Repository\DatabaseCategoryRepository;
+use App\Repository\DatabaseCommentRepository;
 use App\Repository\DatabasePostRepository;
+use App\Repository\DatabaseTagRepository;
+use App\Repository\DatabaseUserRepository;
+use App\Repository\Interface\CategoryRepositoryInterface;
+use App\Repository\Interface\CommentRepositoryInterface;
+use App\Repository\Interface\PostRepositoryInterface;
+use App\Repository\Interface\TagRepositoryInterface;
+use App\Repository\Interface\UserRepositoryInterface;
 use App\Repository\JsonPostRepository;
-use App\Repository\PostRepositoryInterface;
 use App\Service\FileMover;
-use App\Service\FileMoverInterface;
-use App\Service\FileUploaderInterface;
+use App\Service\Interface\CurrentUserProviderInterface;
+use App\Service\Interface\FileMoverInterface;
+use App\Service\Interface\FileUploaderInterface;
+use App\Service\Interface\PostCategoryServiceInterface;
+use App\Service\Interface\PostTagServiceInterface;
+use App\Service\Interface\TransactionManagerInterface;
 use App\Service\LocalFileUploader;
+use App\Service\PostCategoryService;
+use App\Service\PostTagService;
+use App\Service\SessionUserProvider;
+use App\Service\TransactionManager;
 use DI\ContainerBuilder;
 use Rakit\Validation\Validator;
 use Twig\Environment;
@@ -35,14 +51,22 @@ $builder->addDefinitions([
     },
     'config' => $config,
     Environment::class => $twig,
+    CurrentUserProviderInterface::class => DI\get(SessionUserProvider::class),
     JsonPostRepository::class => DI\create()
         ->constructor($config->dbPath()),
     Validator::class => DI\autowire(),
     PostRepositoryInterface::class => DI\get(DatabasePostRepository::class),
+    UserRepositoryInterface::class => DI\get(DatabaseUserRepository::class),
+    TagRepositoryInterface::class => DI\get(DatabaseTagRepository::class),
+    CategoryRepositoryInterface::class => DI\get(DatabaseCategoryRepository::class),
+    CommentRepositoryInterface::class => DI\get(DatabaseCommentRepository::class),
+    PostCategoryServiceInterface::class => DI\get(PostCategoryService::class),
+    PostTagServiceInterface::class => DI\get(PostTagService::class),
+    TransactionManagerInterface::class => DI\get(TransactionManager::class),
     FileUploaderInterface::class => DI\get(LocalFileUploader::class),
     FileMoverInterface::class => DI\get(FileMover::class),
     LocalFileUploader::class => DI\create()
-        ->constructor($config->gallery),
+        ->constructor($config->gallery, DI\get(FileMoverInterface::class)),
 ]);
 $container = $builder->build();
 

@@ -1,32 +1,200 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-<header class="row tm-welcome-section">
-    <h2 class="col-12 text-center tm-section-title">Welcome to Simple House</h2>
-    <p class="col-12 text-center">Total 3 HTML pages are included in this template. Header image has a parallax effect. You can feel free to download, edit and use this TemplateMo layout for your commercial or non-commercial websites.</p>
-</header>
+    <header class="row tm-welcome-section">
+        <h2 class="col-12 text-center tm-section-title">{{ post.getTitle }}</h2>
+        <p class="col-12 text-center">Просмотр статьи о еде и кулинарии.</p>
+    </header>
 
-<div class="tm-paging-links">
-    <nav>
-        <ul>
-            <li class="tm-paging-item"><a href="/posts/create" class="tm-paging-link">Add article</a></li>
-        </ul>
-    </nav>
-</div>
+    <div class="tm-paging-links">
+        <nav>
+            <ul>
+                <li class="tm-paging-item"><a href="/posts/create" class="tm-paging-link">Добавить статью</a></li>
+            </ul>
+        </nav>
+    </div>
 
-<div class="tm-section tm-container-inner">
-    <div class="row">
-        <div class="col-md-6">
-            <figure class="tm-description-figure">
-                <img src="/public/assets/img/gallery/{{ post.getImgName }}" alt="Image" class="img-fluid" />
-            </figure>
-        </div>
-        <div class="col-md-6">
-            <div class="tm-description-box">
-                <h4 class="tm-gallery-title">{{ post.getTitle }}</h4>
-                <p class="tm-mb-45">{{ post.getContent }}</p>
+    <div class="tm-section tm-container-inner">
+        <div class="row">
+            <!-- Левая колонка: Изображение и Метаданные -->
+            <div class="col-md-6">
+                <figure class="tm-description-figure">
+                    <img src="/public/assets/img/gallery/{{ post.getImgName }}" alt="Изображение поста" class="img-fluid rounded" />
+                </figure>
+
+                <div class="mt-4 p-3 bg-gray-100 rounded shadow-sm">
+                    <h5 class="font-bold mb-2 text-xl">Категории:</h5>
+                    <div class="flex flex-wrap gap-2">
+                        {% if categories is not empty %}
+                            {% for category in categories %}
+                                <span class="px-3 py-1 bg-yellow-600 text-white rounded-full text-sm hover:bg-yellow-700 transition duration-300">
+                                {{ category.getName }}
+                            </span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-gray-500">Нет категорий</span>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="font-bold mt-4 mb-2 text-xl">Теги:</h5>
+                    <div class="flex flex-wrap gap-2">
+                        {% if tags is not empty %}
+                            {% for tag in tags %}
+                                <span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm hover:bg-green-700 transition duration-300">
+                                #{{ tag.getName }}
+                            </span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-gray-500">Нет тегов</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Содержимое поста -->
+            <div class="col-md-6">
+                <div class="tm-description-box">
+                    <h4 class="tm-gallery-title mb-4 text-3xl font-semibold">{{ post.getTitle }}</h4>
+                    <div class="tm-mb-45 text-lg leading-relaxed">
+                        {{ post.getContent }}
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Секция Комментарии -->
+        <div class="row mt-10">
+            <div class="col-12" id="comments-section">
+                <h3 class="text-3xl font-bold mb-6 border-b pb-2">Комментарии</h3>
+
+                <!-- Список комментариев -->
+                {% if comments is defined and comments is not empty %}
+                    {% for comment in comments %}
+                        <div class="mb-4 p-4 bg-white rounded shadow-md border-l-4 border-yellow-600 comment-item">
+                            <p class="text-gray-700 mb-2">{{ comment.getContent }}</p>
+                            <p class="text-sm text-gray-500">
+                                — Автор:
+                                {% if comment.getUserId is not null %}
+                                    **Пользователь ID: {{ comment.getUserId.value }}**
+                                {% else %}
+                                    **Гость**
+                                {% endif %}
+                                <span class="ml-2">({{ comment.getCreatedAt|date("d.m.Y H:i") }})</span>
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-600" id="no-comments-message">Пока нет комментариев. Будьте первым, кто оставит отзыв!</p>
+                {% endif %}
+
+                <!-- Форма добавления комментария -->
+                <div class="mt-8 p-5 bg-gray-50 rounded shadow">
+                    <h4 class="text-xl font-semibold mb-4">Оставить комментарий</h4>
+
+                    <div id="comment-message" class="mb-4 hidden p-3 rounded text-white font-bold"></div>
+
+                    <form id="comment-form" action="/posts/{{ post.getId.value }}/comments" method="POST">
+                        <div class="mb-4">
+                            <label for="content" class="block text-gray-700 font-medium mb-2">Ваш комментарий:</label>
+                            <textarea id="content" name="content" rows="4" class="w-full p-3 border border-gray-300 rounded focus:ring-yellow-500 focus:border-yellow-500" required></textarea>
+                            <div id="content-error" class="text-red-500 text-sm mt-1"></div>
+                        </div>
+
+                        <button type="submit" class="tm-paging-item">
+                            Отправить комментарий
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('comment-form');
+            const contentTextarea = document.getElementById('content');
+            const messageBox = document.getElementById('comment-message');
+            const contentError = document.getElementById('content-error');
+            const commentsSection = document.getElementById('comments-section');
+            const noCommentsMessage = document.getElementById('no-comments-message');
+
+            const currentUserId = {{ current_user_id }};
+            const authorText = currentUserId !== null ? `**Пользователь ID: ${currentUserId}**` : `**Гость**`;
+
+            function clearErrors() {
+                contentError.textContent = '';
+                messageBox.classList.add('hidden');
+                messageBox.textContent = '';
+                messageBox.classList.remove('bg-green-500', 'bg-red-500');
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors();
+
+                const formData = new FormData(form);
+                const content = formData.get('content');
+
+                try {
+                    const safeResponse = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await safeResponse.json();
+
+                    if (!safeResponse.ok || !result.success) {
+
+                        let errorMessage = 'Неизвестная ошибка сервера.';
+                        if (result.errors) {
+                            if (result.errors.content) {
+                                contentError.textContent = result.errors.content;
+                                errorMessage = 'Ошибка валидации.';
+                            } else if (result.errors.system) {
+                                errorMessage = result.errors.system;
+                            }
+                        }
+
+                        messageBox.textContent = errorMessage;
+                        messageBox.classList.remove('hidden');
+                        messageBox.classList.add('bg-red-500');
+
+                    } else {
+                        messageBox.textContent = result.message || 'Комментарий успешно добавлен.';
+                        messageBox.classList.remove('hidden');
+                        messageBox.classList.add('bg-green-500');
+
+                        form.reset();
+
+                        const now = new Date();
+                        const formattedDate = `${now.toLocaleDateString('ru-RU')} ${now.toLocaleTimeString('ru-RU')}`;
+
+                        const newCommentHtml = `
+                    <div class="mb-4 p-4 bg-white rounded shadow-md border-l-4 border-yellow-600 comment-item">
+                        <p class="text-gray-700 mb-2">${content}</p>
+                        <p class="text-sm text-gray-500">
+                            — Автор: ${authorText}
+                            <span class="ml-2">(${formattedDate})</span>
+                        </p>
+                    </div>
+                `;
+
+                        const commentsHeader = commentsSection.querySelector('h3');
+
+                        if (noCommentsMessage) {
+                            noCommentsMessage.remove();
+                        }
+
+                        commentsHeader.insertAdjacentHTML('afterend', newCommentHtml);
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    messageBox.textContent = 'Ошибка сети. Не удалось отправить комментарий.';
+                    messageBox.classList.remove('hidden');
+                    messageBox.classList.add('bg-red-500');
+                }
+            });
+        });
+    </script>
 {% endblock %}

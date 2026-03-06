@@ -1,0 +1,87 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <header class="row tm-welcome-section">
+        <h2 class="col-12 text-center tm-section-title">Login</h2>
+        <p class="col-12 text-center">
+            Enter your email and password to access your account.
+        </p>
+    </header>
+
+    <div class="tm-container-inner-2 tm-contact-section">
+        <div class="row">
+            <div class="col-12">
+                <form id="loginForm" action="/login" method="POST" class="tm-contact-form">
+                    <div id="form-messages"></div>
+
+                    <div class="form-group">
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="Email"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Password"
+                               required>
+                    </div>
+
+                    <div class="form-group tm-d-flex">
+                        <button type="submit" class="tm-btn tm-btn-success tm-btn-right">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            $('#loginForm').on('submit', function (e) {
+                e.preventDefault();
+
+                let form = $(this);
+                let messages = $('#form-messages');
+
+                $.ajax({
+                    url: '/login',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (response) {
+                        messages
+                            .removeClass('tm-text-danger')
+                            .addClass('tm-text-success')
+                            .html(response.message);
+
+                        // Просто редирект после успешного входа
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 800);
+                    },
+                    error: function (xhr) {
+                        let res = xhr.responseJSON;
+                        messages.removeClass('tm-text-success').addClass('tm-text-danger');
+
+                        if (res && res.errors) {
+                            let html = '<ul>';
+                            for (const err of res.errors) {
+                                html += `<li>${err}</li>`;
+                            }
+                            html += '</ul>';
+                            messages.html(html);
+                        } else {
+                            messages.html('<p>Произошла ошибка при авторизации.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
